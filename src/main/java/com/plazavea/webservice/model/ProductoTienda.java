@@ -1,5 +1,6 @@
 package com.plazavea.webservice.model;
 
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
@@ -8,28 +9,31 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 
 @Data
 @Entity
-public class OrdenDetalle {
-
-    @EmbeddedId
-    private OrdenDetalleKey id;
-
-    @Column
-    private int cantidad;
-    @Column
-    private Double precio;
+public class ProductoTienda {
     
-    @ManyToOne
-    @MapsId("idOrden")
-    @JoinColumn(name = "id_orden")
-    private Orden orden;
+    @EmbeddedId
+    private ProductoTiendaKey id;
+    @Column
+    private int stock;
+    @Column
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate fechaActualizacion;
 
     @ManyToOne
     @MapsId("idProducto")
     @JoinColumn(name = "id_producto")
     private Producto producto;
+
+    @ManyToOne
+    @MapsId("idTienda")
+    @JoinColumn(name = "id_tienda")
+    private Tienda tienda;
+
 
 }

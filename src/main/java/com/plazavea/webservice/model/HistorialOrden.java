@@ -1,5 +1,6 @@
 package com.plazavea.webservice.model;
 
+
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -10,7 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -18,27 +18,22 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "tarjeta")
-public class Tarjeta {
+public class HistorialOrden {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idTarjeta;
+    private int idHistorial;
     @Column
-    private int tipo;
+    private int estado;
     @Column
-    private String numeroTarjeta;
-    @Column
-    private String cvv;
+    private String descripcion;
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate fechaCaducidad;
-    @Column
-    private String nombrePropietario;
+    private LocalDate fechaEstado;
 
     @ManyToOne
-    @JoinColumn(name = "id_cliente",nullable = false,
-        foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_cliente) references cliente(id_cliente)"))
-    private Cliente cliente;
-    
+    @JoinColumn(name = "id_orden",nullable = false,
+        foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_orden) references orden(id_orden)"))
+    private Orden orden;
+
 }
