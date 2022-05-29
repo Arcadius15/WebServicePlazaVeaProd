@@ -2,8 +2,10 @@ package com.plazavea.webservice.service;
 
 import java.util.List;
 
+import com.plazavea.webservice.model.Cliente;
 import com.plazavea.webservice.model.Usuario;
 import com.plazavea.webservice.repository.UsuarioRepository;
+import com.plazavea.webservice.utils.ModelMapperConfig;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,9 +17,16 @@ public class UsuarioServImpl implements UsuarioServ{
     @Autowired
     private UsuarioRepository repository;
 
+    @Autowired
+    private ModelMapperConfig mapper;
+
     @Override
     @Transactional
     public void registrar(Usuario usuario) {
+        Cliente c = new Cliente();
+        c = mapper.modelMapper().map(usuario.getCliente(), Cliente.class);
+        c.setUsuario(usuario);
+        usuario.setCliente(c);
         repository.save(usuario);
         
     }

@@ -1,7 +1,9 @@
 package com.plazavea.webservice.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,13 +29,13 @@ public class Usuario {
     @Column
     private int estado;
 
-    @OneToOne(mappedBy = "usuario")
+    @OneToOne(mappedBy = "usuario",fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
     private Cliente cliente;
 
-    @OneToOne(mappedBy = "usuario")
+    @OneToOne(mappedBy = "usuario",cascade = CascadeType.ALL)
     private Repartidor repartidor;
 
-    @OneToOne(mappedBy = "usuario")
+    @OneToOne(mappedBy = "usuario",cascade = CascadeType.ALL)
     private Admin admin;
     
 }
