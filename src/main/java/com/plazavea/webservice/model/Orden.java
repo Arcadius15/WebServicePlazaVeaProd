@@ -4,8 +4,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.plazavea.webservice.enums.OrdenStatus;
 
 import lombok.Data;
 
@@ -34,10 +38,10 @@ public class Orden {
     @Column
     private Double total;
     @Column
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDate fecha;
     @Column
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDate fechaEntrega;
     @Column
     private String direccion;
@@ -45,6 +49,8 @@ public class Orden {
     private String formaPago;
     @Column
     private int tipoFop;
+    @Enumerated(EnumType.STRING)
+    private OrdenStatus status;
     
     @ManyToOne
     @JoinColumn(name = "id_cliente",nullable = false,
@@ -61,10 +67,10 @@ public class Orden {
         foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_repartidor) references repartidor(id_repartidor)"))
     private Repartidor repartidor;
 
-    @OneToMany(mappedBy = "orden")
+    @OneToMany(mappedBy = "orden",cascade = CascadeType.ALL)
     private Set<OrdenDetalle> ordendetalle;
 
-    @OneToMany(mappedBy = "orden")
+    @OneToMany(mappedBy = "orden",cascade = CascadeType.ALL)
     private List<HistorialOrden> historial;
     
 }

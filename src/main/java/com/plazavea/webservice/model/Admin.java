@@ -35,8 +35,6 @@ public class Admin {
     private LocalDate fechaNacimiento;
     @Column
     private int numTelefonico;
-    @Column
-    private int nivel;
 
     @OneToOne
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")

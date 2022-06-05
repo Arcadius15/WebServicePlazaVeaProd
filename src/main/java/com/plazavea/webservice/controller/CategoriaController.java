@@ -62,6 +62,16 @@ public class CategoriaController {
         }
     }
 
+    @PostMapping("/lista")
+    public ResponseEntity<Void> createAll(@RequestBody List<Categoria> item) {
+        try {
+            repository.registrarLista(item);
+            return new ResponseEntity<>( HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
+        }
+    }
+
     @PatchMapping("{id}")
     public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody Categoria item) {
         Categoria existingItem = repository.buscar(id);

@@ -2,6 +2,7 @@ package com.plazavea.webservice.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -27,11 +28,11 @@ public class Tipo {
     private String nombre;
 
     @ManyToOne
-    @JoinColumn(name = "id_subcategoria",nullable = false,
+    @JoinColumn(name = "id_subcategoria",
         foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_subcategoria) references subcategoria(id_subcategoria)"))
     private SubCategoria subcategoria;
 
-    @OneToMany(mappedBy = "tipo")
+    @OneToMany(mappedBy = "tipo",cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private List<Subtipo> subtipos;
     
 }

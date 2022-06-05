@@ -2,6 +2,7 @@ package com.plazavea.webservice.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,6 +23,6 @@ public class Categoria {
     @Column
     private String nombre;
 
-    @OneToMany(mappedBy = "categoria")
+    @OneToMany(mappedBy = "categoria",cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private List<SubCategoria> subcategorias;
 }

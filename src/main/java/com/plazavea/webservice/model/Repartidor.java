@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,6 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.plazavea.webservice.enums.RepartidorStatus;
 
 import lombok.Data;
 
@@ -30,20 +33,22 @@ public class Repartidor {
     @Column
     private String apellidos;
     @Column
-    private int dni;
+    private String dni;
     @Column
     private String direccion;
     @Column
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaNacimiento;
     @Column
-    private int numTelefonico;
+    private String numTelefonico;
     @Column(columnDefinition = "BYTEA")
     private byte[] foto;
     @Column
     private String placa;
     @Column
     private int turno;
+    @Enumerated(EnumType.STRING)
+    private RepartidorStatus status;
 
     @OneToOne
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")

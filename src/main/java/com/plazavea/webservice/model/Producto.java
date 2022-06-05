@@ -2,6 +2,7 @@ package com.plazavea.webservice.model;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -26,7 +27,7 @@ public class Producto {
     @Column
     private String nombre;
     @Column
-    private String marca;
+    private String imagenUrl;
     @Column
     private String codigo;
     @Column
@@ -37,19 +38,19 @@ public class Producto {
     private String descripcion;
 
     @ManyToOne
-    @JoinColumn(name = "id_proveedor",nullable = false,
+    @JoinColumn(name = "id_proveedor",
         foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_proveedor) references proveedor(id_proveedor)"))
     private Proveedor proveedor;
 
     @ManyToOne
-    @JoinColumn(name = "id_subtipo",nullable = false,
+    @JoinColumn(name = "id_subtipo",
         foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_subtipo) references subtipo(id_subtipo)"))
     private Subtipo subtipo;
 
-    @OneToMany(mappedBy = "producto")
+    @OneToMany(mappedBy = "producto",cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private Set<ProductoTienda> productosxtienda;
 
-    @OneToMany(mappedBy = "producto")
+    @OneToMany(mappedBy = "producto",cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private Set<OrdenDetalle> ordendetalle;
     
     
