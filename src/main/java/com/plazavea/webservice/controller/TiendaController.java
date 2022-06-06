@@ -42,7 +42,7 @@ public class TiendaController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Tienda> getById(@PathVariable("id") int id) {
+    public ResponseEntity<Tienda> getById(@PathVariable("id") String id) {
         Tienda item = repository.buscar(id);
 
         if (item!=null) {
@@ -63,7 +63,7 @@ public class TiendaController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody Tienda item) {
+    public ResponseEntity<Void> update(@PathVariable("id") String id, @RequestBody Tienda item) {
         Tienda existingItem = repository.buscar(id);
         if (existingItem!=null) {
             repository.editar(existingItem);
@@ -74,7 +74,7 @@ public class TiendaController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") String id) {
         try {
             repository.eliminar(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

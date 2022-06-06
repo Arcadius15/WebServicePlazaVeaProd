@@ -22,30 +22,18 @@ public class CategoriaServImpl implements CategoriaServ{
     @Override
     @Transactional
     public void registrar(Categoria categoria) {
-        //set categoria
-        categoria.getSubcategorias().forEach(x->x.setCategoria(categoria));
-        //set sub categoria
-        categoria.getSubcategorias().forEach(x->
-            x.getTipos().forEach(s->
-                s.setSubcategoria(s.getSubcategoria())
-                )
-            );
-        //set tipo
-        categoria.getSubcategorias().forEach(x->
-            x.getTipos().forEach(s->
-                s.getSubtipos().forEach(t->
-                    t.setTipo(t.getTipo()))
-                )
-            );
-        //set producto
-        categoria.getSubcategorias().forEach(x->
-            x.getTipos().forEach(s->
-                s.getSubtipos().forEach(t->
-                    t.getProductos().forEach(z->
-                        z.setSubtipo(z.getSubtipo())
-                    ))
-                )
-            );
+        for (SubCategoria subCategoria : categoria.getSubcategorias()) {
+            subCategoria.setCategoria(categoria);
+            for (Tipo tipo : subCategoria.getTipos()) {
+                tipo.setSubcategoria(subCategoria);
+                for (Subtipo subtipo : tipo.getSubtipos()) {
+                    subtipo.setTipo(tipo);
+                    for (Producto producto : subtipo.getProductos()) {
+                        producto.setSubtipo(subtipo);
+                    }
+                }
+            }
+        }
         repository.save(categoria);
     }
 

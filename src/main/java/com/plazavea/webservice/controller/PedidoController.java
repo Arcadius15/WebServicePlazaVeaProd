@@ -3,8 +3,6 @@ package com.plazavea.webservice.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.plazavea.webservice.model.Cliente;
-import com.plazavea.webservice.service.ClienteServ;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,17 +16,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequestMapping("/cliente")
-public class ClienteController {
+import com.plazavea.webservice.model.Pedido;
+import com.plazavea.webservice.service.PedidoServ;
 
+
+
+@RestController
+@RequestMapping("/pedido")
+public class PedidoController {
     @Autowired
-    private ClienteServ repository;
+    private PedidoServ repository;
 
     @GetMapping
-    public ResponseEntity<List<Cliente>> getAll() {
+    public ResponseEntity<List<Pedido>> getAll() {
         try {
-            List<Cliente> items = new ArrayList<Cliente>();
+            List<Pedido> items = new ArrayList<Pedido>();
 
             repository.listar().forEach(items::add);
 
@@ -42,8 +44,8 @@ public class ClienteController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Cliente> getById(@PathVariable("id") String id) {
-        Cliente item = repository.buscar(id);
+    public ResponseEntity<Pedido> getById(@PathVariable("id") String id) {
+        Pedido item = repository.buscar(id);
 
         if (item!=null) {
             return new ResponseEntity<>(item, HttpStatus.OK);
@@ -53,7 +55,7 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody Cliente item) {
+    public ResponseEntity<Void> create(@RequestBody Pedido item) {
         try {
             repository.registrar(item);
             return new ResponseEntity<>( HttpStatus.CREATED);
@@ -63,8 +65,8 @@ public class ClienteController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<Void> update(@PathVariable("id") String id, @RequestBody Cliente item) {
-        Cliente existingItem = repository.buscar(id);
+    public ResponseEntity<Void> update(@PathVariable("id") String id, @RequestBody Pedido item) {
+        Pedido existingItem = repository.buscar(id);
         if (existingItem!=null) {
             repository.editar(existingItem);
             return new ResponseEntity<>(null, HttpStatus.OK);

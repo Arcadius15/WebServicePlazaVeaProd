@@ -49,7 +49,7 @@ public class OrdenServImpl implements OrdenServ{
 
     @Override
     @Transactional
-    public void eliminar(int id) {
+    public void eliminar(String id) {
         repository.deleteById(id);
     }
 
@@ -62,7 +62,7 @@ public class OrdenServImpl implements OrdenServ{
 
     @Override
     @Transactional(readOnly = true)
-    public Orden buscar(int id) {
+    public Orden buscar(String id) {
         return repository.findById(id).orElse(null);
     }
     

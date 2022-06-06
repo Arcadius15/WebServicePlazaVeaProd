@@ -7,7 +7,7 @@ import com.plazavea.webservice.model.Proveedor;
 public interface ProveedorServ {
     public void registrar(Proveedor proveedor);
     public void editar(Proveedor proveedor);
-    public void eliminar(int id);
+    public void eliminar(String id);
     public List<Proveedor> listar();
-    public Proveedor buscar(int id);
+    public Proveedor buscar(String id);
 }

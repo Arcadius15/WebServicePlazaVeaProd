@@ -16,6 +16,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
+import com.plazavea.webservice.utils.StringPrefixedSequenceGenerator;
 
 import lombok.Data;
 
@@ -25,9 +29,14 @@ import lombok.Data;
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "usuario_seq")
+    @GenericGenerator(name = "usuario_seq",strategy = "com.plazavea.webservice.utils.StringPrefixedSequenceGenerator",parameters = {
+        @Parameter(name = StringPrefixedSequenceGenerator.INCREMENT_PARAM,value = "1"),
+        @Parameter(name = StringPrefixedSequenceGenerator.VALUE_PREFIX_PARAMETER,value = "USR_"),
+        @Parameter(name = StringPrefixedSequenceGenerator.NUMBER_FORMAT_PARAMETER,value = "%05d")
+    })
     @Column(name = "id_usuario")
-    private Integer idUsuario;
+    private String idUsuario;
     @Column
     private String email;
     @Column

@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -16,6 +17,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.plazavea.webservice.utils.StringPrefixedSequenceGenerator;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import lombok.Data;
 
@@ -25,8 +30,13 @@ import lombok.Data;
 public class Tienda {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idTienda;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "tienda_seq")
+    @GenericGenerator(name = "tienda_seq",strategy = "com.plazavea.webservice.utils.StringPrefixedSequenceGenerator",parameters = {
+        @Parameter(name = StringPrefixedSequenceGenerator.INCREMENT_PARAM,value = "1"),
+        @Parameter(name = StringPrefixedSequenceGenerator.VALUE_PREFIX_PARAMETER,value = "T_"),
+        @Parameter(name = StringPrefixedSequenceGenerator.NUMBER_FORMAT_PARAMETER,value = "%05d")
+    })
+    private String idTienda;
     @Column
     private String nombre;
     @Column
@@ -45,9 +55,12 @@ public class Tienda {
         foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_admin) references admin(id_admin)"))
     private Admin admin;
     
-    @OneToMany(mappedBy = "tienda")
+    @OneToMany(mappedBy = "tienda",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private Set<ProductoTienda> productosxtienda;
 
     @OneToMany(mappedBy = "tienda")
     private List<Orden> ordenes;
+
+    @OneToMany(mappedBy = "tienda",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    private List<Pedido> pedidos;
 }

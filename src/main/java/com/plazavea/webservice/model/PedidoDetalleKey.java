@@ -4,16 +4,14 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import lombok.Data;
 
+import lombok.Data;
 
 @Data
 @Embeddable
-public class OrdenDetalleKey implements Serializable{
-
-    @Column(name = "id_orden")
-    private String idOrden;
-
+public class PedidoDetalleKey implements Serializable{
     @Column(name = "id_producto")
     private String idProducto;
+    @Column(name = "id_pedido")
+    private String idPedido;
 }

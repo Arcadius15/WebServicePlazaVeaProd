@@ -14,6 +14,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
+import com.plazavea.webservice.utils.StringPrefixedSequenceGenerator;
+
 import lombok.Data;
 
 @Data
@@ -22,8 +27,13 @@ import lombok.Data;
 public class Producto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idProducto;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "producto_seq")
+    @GenericGenerator(name = "producto_seq",strategy = "com.plazavea.webservice.utils.StringPrefixedSequenceGenerator",parameters = {
+        @Parameter(name = StringPrefixedSequenceGenerator.INCREMENT_PARAM,value = "1"),
+        @Parameter(name = StringPrefixedSequenceGenerator.VALUE_PREFIX_PARAMETER,value = "P_"),
+        @Parameter(name = StringPrefixedSequenceGenerator.NUMBER_FORMAT_PARAMETER,value = "%05d")
+    })
+    private String idProducto;
     @Column
     private String nombre;
     @Column
@@ -52,6 +62,8 @@ public class Producto {
 
     @OneToMany(mappedBy = "producto",cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private Set<OrdenDetalle> ordendetalle;
-    
+
+    @OneToMany(mappedBy = "producto",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    private Set<PedidoDetalle> pedidodetalle;
     
 }

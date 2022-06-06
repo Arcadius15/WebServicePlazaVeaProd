@@ -29,7 +29,7 @@ public class ProveedorServImpl implements ProveedorServ{
 
     @Override
     @Transactional
-    public void eliminar(int id) {
+    public void eliminar(String id) {
         repository.deleteById(id);
     }
 
@@ -41,7 +41,7 @@ public class ProveedorServImpl implements ProveedorServ{
 
     @Override
     @Transactional(readOnly = true)
-    public Proveedor buscar(int id) {
+    public Proveedor buscar(String id) {
         return repository.findById(id).orElse(null);
     }
     

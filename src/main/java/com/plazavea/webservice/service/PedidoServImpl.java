@@ -2,30 +2,30 @@ package com.plazavea.webservice.service;
 
 import java.util.List;
 
-import com.plazavea.webservice.model.Producto;
-import com.plazavea.webservice.repository.ProductoRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.plazavea.webservice.model.Pedido;
+import com.plazavea.webservice.repository.PedidoRepository;
+
 @Service
-public class ProductoServImpl implements ProductoServ{
+public class PedidoServImpl implements PedidoServ{
 
     @Autowired
-    private ProductoRepository repository;
+    private PedidoRepository repository;
 
     @Override
     @Transactional
-    public void registrar(Producto producto) {
-        repository.save(producto);
+    public void registrar(Pedido pedido) {
+        repository.save(pedido);
         
     }
 
     @Override
     @Transactional
-    public void editar(Producto producto) {
-        repository.saveAndFlush(producto);
+    public void editar(Pedido pedido) {
+        repository.saveAndFlush(pedido);
         
     }
 
@@ -38,14 +38,14 @@ public class ProductoServImpl implements ProductoServ{
 
     @Override
     @Transactional(readOnly = true)
-    public List<Producto> listar() {
+    public List<Pedido> listar() {
         
         return repository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Producto buscar(String id) {
+    public Pedido buscar(String id) {
         
         return repository.findById(id).orElse(null);
     }

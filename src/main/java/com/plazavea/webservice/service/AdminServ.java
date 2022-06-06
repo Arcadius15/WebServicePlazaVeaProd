@@ -8,7 +8,7 @@ import com.plazavea.webservice.model.Admin;
 public interface AdminServ {
     public void registrar(Admin admin);
     public void editar(Admin admin);
-    public void eliminar(int id);
+    public void eliminar(String id);
     public List<Admin> listar();
-    public Admin buscar(int id);
+    public Admin buscar(String id);
 }

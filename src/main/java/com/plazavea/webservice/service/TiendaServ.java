@@ -7,7 +7,7 @@ import com.plazavea.webservice.model.Tienda;
 public interface TiendaServ {
     public void registrar(Tienda tienda);
     public void editar(Tienda tienda);
-    public void eliminar(int id);
+    public void eliminar(String id);
     public List<Tienda> listar();
-    public Tienda buscar(int id);
+    public Tienda buscar(String id);
 }

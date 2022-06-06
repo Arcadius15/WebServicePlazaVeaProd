@@ -42,7 +42,7 @@ public class AdminController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Admin> getById(@PathVariable("id") int id) {
+    public ResponseEntity<Admin> getById(@PathVariable("id") String id) {
         Admin item = repository.buscar(id);
 
         if (item!=null) {
@@ -63,7 +63,7 @@ public class AdminController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody Admin item) {
+    public ResponseEntity<Void> update(@PathVariable("id") String id, @RequestBody Admin item) {
         Admin existingItem = repository.buscar(id);
         if (existingItem!=null) {
             repository.editar(existingItem);
@@ -74,7 +74,7 @@ public class AdminController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") String id) {
         try {
             repository.eliminar(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

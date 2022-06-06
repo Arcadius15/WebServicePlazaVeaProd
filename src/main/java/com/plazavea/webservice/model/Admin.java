@@ -14,6 +14,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.plazavea.webservice.utils.StringPrefixedSequenceGenerator;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import lombok.Data;
 
@@ -22,8 +26,13 @@ import lombok.Data;
 @Table(name = "admin")
 public class Admin {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idAdmin;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "admin_seq")
+    @GenericGenerator(name = "admin_seq",strategy = "com.plazavea.webservice.utils.StringPrefixedSequenceGenerator",parameters = {
+        @Parameter(name = StringPrefixedSequenceGenerator.INCREMENT_PARAM,value = "1"),
+        @Parameter(name = StringPrefixedSequenceGenerator.VALUE_PREFIX_PARAMETER,value = "USR_"),
+        @Parameter(name = StringPrefixedSequenceGenerator.NUMBER_FORMAT_PARAMETER,value = "%05d")
+    })
+    private String idAdmin;
     @Column
     private String nombres;
     @Column
@@ -42,4 +51,7 @@ public class Admin {
 
     @OneToMany(mappedBy = "admin")
     private List<Tienda> tienda;
+
+    @OneToMany(mappedBy = "admin")
+    private List<Pedido> pedidos;
 }

@@ -12,8 +12,8 @@ import lombok.Data;
 public class ProductoTiendaKey implements Serializable{
 
     @Column(name = "id_producto")
-    private int idProducto;
+    private String idProducto;
 
     @Column(name = "id_tienda")
-    private int idTienda;
+    private String idTienda;
 }

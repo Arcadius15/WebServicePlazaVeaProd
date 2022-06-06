@@ -42,7 +42,7 @@ public class OrdenController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Orden> getById(@PathVariable("id") int id) {
+    public ResponseEntity<Orden> getById(@PathVariable("id") String id) {
         Orden item = repository.buscar(id);
 
         if (item!=null) {
@@ -63,7 +63,7 @@ public class OrdenController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody Orden item) {
+    public ResponseEntity<Void> update(@PathVariable("id") String id, @RequestBody Orden item) {
         Orden existingItem = repository.buscar(id);
         if (existingItem!=null) {
             repository.editar(existingItem);
@@ -74,7 +74,7 @@ public class OrdenController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") String id) {
         try {
             repository.eliminar(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

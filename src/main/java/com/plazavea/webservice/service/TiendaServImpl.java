@@ -31,7 +31,7 @@ public class TiendaServImpl implements TiendaServ{
 
     @Override
     @Transactional
-    public void eliminar(int id) {
+    public void eliminar(String id) {
         repository.deleteById(id);
         
     }
@@ -45,7 +45,7 @@ public class TiendaServImpl implements TiendaServ{
 
     @Override
     @Transactional(readOnly = true)
-    public Tienda buscar(int id) {
+    public Tienda buscar(String id) {
         
         return repository.findById(id).orElse(null);
     }

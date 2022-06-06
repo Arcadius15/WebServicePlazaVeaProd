@@ -7,7 +7,7 @@ import com.plazavea.webservice.model.Cliente;
 public interface ClienteServ {
     public void registrar(Cliente cliente);
     public void editar(Cliente cliente);
-    public void eliminar(int id);
+    public void eliminar(String id);
     public List<Cliente> listar();
-    public Cliente buscar(int id);
+    public Cliente buscar(String id);
 }

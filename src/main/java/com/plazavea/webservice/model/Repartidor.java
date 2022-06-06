@@ -17,6 +17,10 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.plazavea.webservice.enums.RepartidorStatus;
+import com.plazavea.webservice.utils.StringPrefixedSequenceGenerator;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import lombok.Data;
 
@@ -26,8 +30,13 @@ import lombok.Data;
 public class Repartidor {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idRepartidor;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "repartidor_seq")
+    @GenericGenerator(name = "repartidor_seq",strategy = "com.plazavea.webservice.utils.StringPrefixedSequenceGenerator",parameters = {
+        @Parameter(name = StringPrefixedSequenceGenerator.INCREMENT_PARAM,value = "1"),
+        @Parameter(name = StringPrefixedSequenceGenerator.VALUE_PREFIX_PARAMETER,value = "DLVRY_"),
+        @Parameter(name = StringPrefixedSequenceGenerator.NUMBER_FORMAT_PARAMETER,value = "%05d")
+    })
+    private String idRepartidor;
     @Column
     private String nombre;
     @Column

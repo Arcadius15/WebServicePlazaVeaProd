@@ -58,7 +58,7 @@ public class UsuarioServImpl implements UsuarioServ{
 
     @Override
     @Transactional
-    public void eliminar(int id) {
+    public void eliminar(String id) {
         repository.deleteById(id);
         
     }
@@ -72,7 +72,7 @@ public class UsuarioServImpl implements UsuarioServ{
 
     @Override
     @Transactional(readOnly = true)
-    public Usuario buscar(int id) {
+    public Usuario buscar(String id) {
         
         return repository.findById(id).orElse(null);
     }

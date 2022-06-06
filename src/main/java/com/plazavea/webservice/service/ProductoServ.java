@@ -7,7 +7,7 @@ import com.plazavea.webservice.model.Producto;
 public interface ProductoServ {
     public void registrar(Producto producto);
     public void editar(Producto producto);
-    public void eliminar(int id);
+    public void eliminar(String id);
     public List<Producto> listar();
-    public Producto buscar(int id);
+    public Producto buscar(String id);
 }

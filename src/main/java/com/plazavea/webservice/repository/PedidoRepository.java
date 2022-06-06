@@ -1,11 +1,11 @@
 package com.plazavea.webservice.repository;
 
-import com.plazavea.webservice.model.Orden;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.plazavea.webservice.model.Pedido;
+
 @Repository
-public interface OrdenRepository extends JpaRepository<Orden,String>{
+public interface PedidoRepository extends JpaRepository<Pedido,String>{
     
 }

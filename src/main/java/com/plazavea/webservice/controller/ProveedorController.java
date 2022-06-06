@@ -42,7 +42,7 @@ public class ProveedorController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Proveedor> getById(@PathVariable("id") int id) {
+    public ResponseEntity<Proveedor> getById(@PathVariable("id") String id) {
         Proveedor item = repository.buscar(id);
 
         if (item!=null) {
@@ -63,7 +63,7 @@ public class ProveedorController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody Proveedor item) {
+    public ResponseEntity<Void> update(@PathVariable("id") String id, @RequestBody Proveedor item) {
         Proveedor existingItem = repository.buscar(id);
         if (existingItem!=null) {
             repository.editar(existingItem);
@@ -74,7 +74,7 @@ public class ProveedorController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") String id) {
         try {
             repository.eliminar(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

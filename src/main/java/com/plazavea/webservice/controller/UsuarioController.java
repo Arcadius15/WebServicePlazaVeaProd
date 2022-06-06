@@ -42,7 +42,7 @@ public class UsuarioController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Usuario> getById(@PathVariable("id") int id) {
+    public ResponseEntity<Usuario> getById(@PathVariable("id") String id) {
         Usuario item = repository.buscar(id);
 
         if (item!=null) {
@@ -63,7 +63,7 @@ public class UsuarioController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody Usuario item) {
+    public ResponseEntity<Void> update(@PathVariable("id") String id, @RequestBody Usuario item) {
         Usuario existingItem = repository.buscar(id);
         if (existingItem!=null) {
             repository.editar(existingItem);
@@ -74,7 +74,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") String id) {
         try {
             repository.eliminar(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

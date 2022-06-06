@@ -20,6 +20,10 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.plazavea.webservice.enums.OrdenStatus;
+import com.plazavea.webservice.utils.StringPrefixedSequenceGenerator;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import lombok.Data;
 
@@ -29,8 +33,13 @@ import lombok.Data;
 public class Orden {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idOrden;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "orden_seq")
+    @GenericGenerator(name = "orden_seq",strategy = "com.plazavea.webservice.utils.StringPrefixedSequenceGenerator",parameters = {
+        @Parameter(name = StringPrefixedSequenceGenerator.INCREMENT_PARAM,value = "1"),
+        @Parameter(name = StringPrefixedSequenceGenerator.VALUE_PREFIX_PARAMETER,value = "ORD_"),
+        @Parameter(name = StringPrefixedSequenceGenerator.NUMBER_FORMAT_PARAMETER,value = "%05d")
+    })
+    private String idOrden;
     @Column
     private Double monto;
     @Column

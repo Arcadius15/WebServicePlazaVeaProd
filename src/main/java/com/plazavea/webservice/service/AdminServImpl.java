@@ -30,7 +30,7 @@ public class AdminServImpl implements AdminServ{
 
     @Override
     @Transactional
-    public void eliminar(int id) {
+    public void eliminar(String id) {
         repository.deleteById(id);
     }
 
@@ -43,7 +43,7 @@ public class AdminServImpl implements AdminServ{
 
     @Override
     @Transactional(readOnly = true)
-    public Admin buscar(int id) {
+    public Admin buscar(String id) {
         return repository.findById(id).orElse(null);
     }
     

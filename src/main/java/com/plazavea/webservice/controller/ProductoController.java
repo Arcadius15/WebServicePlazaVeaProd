@@ -42,7 +42,7 @@ public class ProductoController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Producto> getById(@PathVariable("id") int id) {
+    public ResponseEntity<Producto> getById(@PathVariable("id") String id) {
         Producto item = repository.buscar(id);
 
         if (item!=null) {
@@ -63,7 +63,7 @@ public class ProductoController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody Producto item) {
+    public ResponseEntity<Void> update(@PathVariable("id") String id, @RequestBody Producto item) {
         Producto existingItem = repository.buscar(id);
         if (existingItem!=null) {
             repository.editar(existingItem);
@@ -74,7 +74,7 @@ public class ProductoController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable("id") int id) {
+    public ResponseEntity<HttpStatus> delete(@PathVariable("id") String id) {
         try {
             repository.eliminar(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

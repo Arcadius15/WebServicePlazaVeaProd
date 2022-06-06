@@ -29,7 +29,7 @@ public class ClienteServImpl implements ClienteServ{
 
     @Override
     @Transactional
-    public void eliminar(int id) {
+    public void eliminar(String id) {
         repository.deleteById(id);
     }
 
@@ -41,7 +41,7 @@ public class ClienteServImpl implements ClienteServ{
 
     @Override
     @Transactional(readOnly = true)
-    public Cliente buscar(int id) {
+    public Cliente buscar(String id) {
         return repository.findById(id).orElse(null);
     }
     

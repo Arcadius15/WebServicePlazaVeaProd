@@ -10,6 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
+import com.plazavea.webservice.utils.StringPrefixedSequenceGenerator;
+
 import lombok.Data;
 
 @Data
@@ -18,8 +23,13 @@ import lombok.Data;
 public class Proveedor {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idProveedor;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "proveedor_seq")
+    @GenericGenerator(name = "proveedor_seq",strategy = "com.plazavea.webservice.utils.StringPrefixedSequenceGenerator",parameters = {
+        @Parameter(name = StringPrefixedSequenceGenerator.INCREMENT_PARAM,value = "1"),
+        @Parameter(name = StringPrefixedSequenceGenerator.VALUE_PREFIX_PARAMETER,value = "PRO_"),
+        @Parameter(name = StringPrefixedSequenceGenerator.NUMBER_FORMAT_PARAMETER,value = "%05d")
+    })
+    private String idProveedor;
     @Column
     private String nombreCompania;
     @Column
