@@ -5,5 +5,10 @@ public enum Roles {
     CLIENTE,
     DELIVERY,
     MASTER,
-    EMPLEADO
+    EMPLEADO,
+    ROLE_ADMIN,
+    ROLE_CLIENTE,
+    ROLE_DELIVERY,
+    ROLE_MASTER,
+    ROLE_EMPLEADO
 }

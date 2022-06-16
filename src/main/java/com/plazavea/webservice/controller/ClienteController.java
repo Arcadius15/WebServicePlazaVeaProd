@@ -58,6 +58,7 @@ public class ClienteController {
             repository.registrar(item);
             return new ResponseEntity<>( HttpStatus.CREATED);
         } catch (Exception e) {
+        	e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
         }
     }

@@ -27,6 +27,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		.withUser("developer")
 		.password(encriptado().encode("master"))
 		.roles("MASTER");
+        auth.inMemoryAuthentication()
+		.withUser("prueba@mail.com")
+		.password(encriptado().encode("1234"))
+		.roles("CLIENTE");
 
 		auth.userDetailsService(service).passwordEncoder(encriptado());
     }
@@ -39,10 +43,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers(HttpMethod.POST,"/producto").hasAnyRole(Roles.ADMIN.name(),Roles.EMPLEADO.name(),Roles.MASTER.name())
 			.antMatchers(HttpMethod.PUT,"/producto/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.EMPLEADO.name(),Roles.MASTER.name())
 			//admin
+			.antMatchers(HttpMethod.GET,"/admin").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name())
 			.antMatchers(HttpMethod.GET,"/admin/*").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name())
 			.antMatchers(HttpMethod.POST,"/admin").hasAnyRole(Roles.MASTER.name())
 			.antMatchers(HttpMethod.PUT,"/admin/{id}").hasAnyRole(Roles.MASTER.name())
 			//categoria
+			.antMatchers(HttpMethod.GET,"/categoria").permitAll()
 			.antMatchers(HttpMethod.GET,"/categoria/*").permitAll()
 			.antMatchers(HttpMethod.POST,"/categoria").hasAnyRole(Roles.ADMIN.name(),Roles.EMPLEADO.name(),Roles.MASTER.name())
 			.antMatchers(HttpMethod.PUT,"/categoria/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.EMPLEADO.name(),Roles.MASTER.name())

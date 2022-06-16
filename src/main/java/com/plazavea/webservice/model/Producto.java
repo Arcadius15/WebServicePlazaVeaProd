@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.plazavea.webservice.utils.StringPrefixedSequenceGenerator;
 
 import lombok.Data;
@@ -24,6 +25,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "producto")
+@JsonIgnoreProperties({"proveedor", "subtipo", "productosxtienda", "ordendetalle", "pedidodetalle"})
 public class Producto {
 
     @Id
