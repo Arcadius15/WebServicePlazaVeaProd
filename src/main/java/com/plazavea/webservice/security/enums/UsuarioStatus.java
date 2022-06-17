@@ -1,4 +1,4 @@
-package com.plazavea.webservice.enums;
+package com.plazavea.webservice.security.enums;
 
 public enum UsuarioStatus {
     ACTIVO,

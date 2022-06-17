@@ -1,4 +1,4 @@
-package com.plazavea.webservice.model;
+package com.plazavea.webservice.security.model;
 
 import java.util.Set;
 
@@ -11,11 +11,15 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import com.plazavea.webservice.enums.Roles;
+import com.plazavea.webservice.security.enums.Roles;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "rol")
 public class Rol {
@@ -27,4 +31,8 @@ public class Rol {
 
     @ManyToMany(mappedBy = "roles")
     private Set<Usuario> usuarios;
+
+    public Rol(Roles rol) {
+        this.rol = rol;
+    }
 }

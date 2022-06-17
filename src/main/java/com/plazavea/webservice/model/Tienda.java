@@ -51,9 +51,9 @@ public class Tienda {
     private LocalTime horarioC;
 
     @ManyToOne
-    @JoinColumn(name = "id_admin",nullable = false,
-        foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_admin) references admin(id_admin)"))
-    private Admin admin;
+    @JoinColumn(name = "id_empleado",nullable = false,
+        foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_empleado) references empleado(id_empleado)"))
+    private Empleado empleado;
     
     @OneToMany(mappedBy = "tienda",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private Set<ProductoTienda> productosxtienda;

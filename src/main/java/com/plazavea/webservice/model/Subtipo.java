@@ -14,6 +14,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Data;
 
 @Data
@@ -32,6 +34,7 @@ public class Subtipo {
         foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_tipo) references tipo(id_tipo)"))
     private Tipo tipo;
 
+    @JsonIgnoreProperties({"subtipo"})
     @OneToMany(mappedBy = "subtipo",cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private List<Producto> productos;
 

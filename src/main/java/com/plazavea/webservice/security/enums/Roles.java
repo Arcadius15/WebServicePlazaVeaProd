@@ -1,11 +1,7 @@
-package com.plazavea.webservice.enums;
+package com.plazavea.webservice.security.enums;
 
 public enum Roles {
-    ADMIN,
-    CLIENTE,
-    DELIVERY,
-    MASTER,
-    EMPLEADO,
+    ROLE_USER,
     ROLE_ADMIN,
     ROLE_CLIENTE,
     ROLE_DELIVERY,

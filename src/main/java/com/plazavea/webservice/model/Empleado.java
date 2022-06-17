@@ -14,6 +14,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.plazavea.webservice.security.model.Usuario;
 import com.plazavea.webservice.utils.StringPrefixedSequenceGenerator;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -23,16 +24,16 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "admin")
-public class Admin {
+@Table(name = "empleado")
+public class Empleado {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "admin_seq")
-    @GenericGenerator(name = "admin_seq",strategy = "com.plazavea.webservice.utils.StringPrefixedSequenceGenerator",parameters = {
+    @GenericGenerator(name = "empleado_seq",strategy = "com.plazavea.webservice.utils.StringPrefixedSequenceGenerator",parameters = {
         @Parameter(name = StringPrefixedSequenceGenerator.INCREMENT_PARAM,value = "1"),
         @Parameter(name = StringPrefixedSequenceGenerator.VALUE_PREFIX_PARAMETER,value = "USR_"),
         @Parameter(name = StringPrefixedSequenceGenerator.NUMBER_FORMAT_PARAMETER,value = "%05d")
     })
-    private String idAdmin;
+    private String idEmpleado;
     @Column
     private String nombres;
     @Column
@@ -49,9 +50,9 @@ public class Admin {
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
     private Usuario usuario;
 
-    @OneToMany(mappedBy = "admin")
+    @OneToMany(mappedBy = "empleado")
     private List<Tienda> tienda;
 
-    @OneToMany(mappedBy = "admin")
+    @OneToMany(mappedBy = "empleado")
     private List<Pedido> pedidos;
 }

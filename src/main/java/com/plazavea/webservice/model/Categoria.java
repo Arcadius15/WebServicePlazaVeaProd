@@ -18,7 +18,6 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "categoria")
-@JsonIgnoreProperties({"subcategorias"})
 public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +25,7 @@ public class Categoria {
     @Column
     private String nombre;
 
+    @JsonIgnoreProperties({"categoria"})
     @OneToMany(mappedBy = "categoria",cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private List<SubCategoria> subcategorias;
 }

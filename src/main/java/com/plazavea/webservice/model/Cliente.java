@@ -16,6 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.plazavea.webservice.security.model.Usuario;
 import com.plazavea.webservice.utils.StringPrefixedSequenceGenerator;
 
 import org.hibernate.annotations.GenericGenerator;

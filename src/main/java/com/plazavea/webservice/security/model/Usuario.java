@@ -1,4 +1,4 @@
-package com.plazavea.webservice.model;
+package com.plazavea.webservice.security.model;
 
 import java.util.Set;
 
@@ -19,7 +19,10 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.plazavea.webservice.model.Empleado;
+import com.plazavea.webservice.model.Cliente;
+import com.plazavea.webservice.model.Repartidor;
 import com.plazavea.webservice.utils.StringPrefixedSequenceGenerator;
 
 import lombok.Data;
@@ -41,6 +44,7 @@ public class Usuario {
     @Column
     private String email;
     @Column
+    @JsonIgnore
     private String password;
     @Column
     private int estado;
@@ -52,7 +56,7 @@ public class Usuario {
     private Repartidor repartidor;
 
     @OneToOne(mappedBy = "usuario",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
-    private Admin admin;
+    private Empleado empleado;
 
     @ManyToMany
     @JoinTable(name="rol_usuario",
