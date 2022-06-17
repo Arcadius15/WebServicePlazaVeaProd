@@ -85,6 +85,7 @@ public class UserDetService implements UserDetailsService{
         if (roles.size()==1) {
             return null;
         }
+        user.setRoles(roles);
         return repository.save(user);
     }
 
