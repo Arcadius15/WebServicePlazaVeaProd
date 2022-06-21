@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
@@ -21,6 +22,10 @@ public class Especificaciones {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idEspec;
+    @Column
+    private String especificacion;
+
+    @ManyToOne
     @Column(length =  1000)
     private String nombre;
     @Column(length = 8000)

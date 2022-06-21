@@ -9,7 +9,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 import javax.persistence.ForeignKey;
 
@@ -22,6 +24,10 @@ public class Descripcion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idDescripcion;
+    @Column
+    private String descripcion;
+
+    @ManyToOne
     @Column(length = 400)
     private String descripcion;
 

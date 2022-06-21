@@ -22,6 +22,10 @@ public class Promocion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idProm;
+    @Column
+    private String condicion;
+
+    @ManyToOne
     @Column(length = 800)
     private String condicion;
 
