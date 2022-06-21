@@ -38,7 +38,7 @@ public class UserDetService implements UserDetailsService{
         Usuario user = repository.findByEmail(email).get();
         if (user!=null) {
             List<GrantedAuthority> roles = new ArrayList<GrantedAuthority>();
-            user.getRoles().forEach(x-> roles.add(new SimpleGrantedAuthority(x.getRol().name()))); 
+            user.getRoles().forEach(x-> roles.add(new SimpleGrantedAuthority("ROLE_" + x.getRol().name()))); 
             return new User(user.getEmail(),user.getPassword(),roles);
         }else{
             throw new UsernameNotFoundException("El usuario no existe");
@@ -50,35 +50,35 @@ public class UserDetService implements UserDetailsService{
         user.setEmail(userReq.getEmail());
         user.setPassword(encriptador().encode(userReq.getPassword()));
         Set<Rol> roles = new HashSet<>();
-        roles.add(rolServ.getByRolNombre(Roles.ROLE_USER).get());
+        roles.add(rolServ.getByRolNombre(Roles.USER).get());
         for (String rolReq : userReq.getRoles()) {
             switch (rolReq.toLowerCase()) {
                 case "repartidor":
                     if (userReq.getRepartidor()!=null) {
                         user.setRepartidor(userReq.getRepartidor());
-                        roles.add(rolServ.getByRolNombre(Roles.ROLE_DELIVERY).get());
+                        roles.add(rolServ.getByRolNombre(Roles.DELIVERY).get());
                     }
                     break;
                 case "cliente":
                     if (userReq.getCliente()!=null) {
                         user.setCliente(userReq.getCliente());
-                        roles.add(rolServ.getByRolNombre(Roles.ROLE_CLIENTE).get());
+                        roles.add(rolServ.getByRolNombre(Roles.CLIENTE).get());
                     }
                 break;
                 case "empleado":
                     if (userReq.getEmpleado()!=null) {
                         user.setEmpleado(userReq.getEmpleado());
-                        roles.add(rolServ.getByRolNombre(Roles.ROLE_EMPLEADO).get());
+                        roles.add(rolServ.getByRolNombre(Roles.EMPLEADO).get());
                     }
                 break;
                 case "admin":
                     if (userReq.getEmpleado()!=null) {
                         user.setEmpleado(userReq.getEmpleado());
-                        roles.add(rolServ.getByRolNombre(Roles.ROLE_ADMIN).get());
+                        roles.add(rolServ.getByRolNombre(Roles.ADMIN).get());
                     }
                 break;
                 case "master":
-                    roles.add(rolServ.getByRolNombre(Roles.ROLE_MASTER).get());
+                    roles.add(rolServ.getByRolNombre(Roles.MASTER).get());
                 break;
             }
         }

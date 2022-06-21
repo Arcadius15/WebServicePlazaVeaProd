@@ -58,7 +58,7 @@ public class Usuario {
     @OneToOne(mappedBy = "usuario",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private Empleado empleado;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="rol_usuario",
         joinColumns = @JoinColumn(name="id_usuario",
             foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key(id_usuario) references usuario(id_usuario)")),

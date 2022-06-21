@@ -8,7 +8,10 @@ import com.plazavea.webservice.security.enums.Roles;
 import com.plazavea.webservice.security.model.Rol;
 import com.plazavea.webservice.security.service.RolServ;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class CrearRoles implements CommandLineRunner{
     
     @Autowired
@@ -18,9 +21,10 @@ public class CrearRoles implements CommandLineRunner{
     public void run(String... args) throws Exception {
         if (service.listar().isEmpty()) {
             for (Roles rol : Roles.values()) {
+                log.info(rol.name());
                 service.save(new Rol(rol));
             }
-            System.out.println("Roles Creados");
+            log.info("Roles Creados");
         }
     }
 

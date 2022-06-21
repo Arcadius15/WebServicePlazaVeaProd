@@ -29,6 +29,7 @@ public class SubCategoria {
     private int idSubcategoria;
     @Column
     private String nombre;
+    private String urlFoto;
 
     @JsonIgnore
     @ManyToOne

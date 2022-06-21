@@ -9,11 +9,15 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.plazavea.webservice.security.enums.Roles;
 import com.plazavea.webservice.security.service.UserDetService;
+import com.plazavea.webservice.security.utils.EntryPoint;
+import com.plazavea.webservice.security.utils.TokenFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -21,6 +25,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     
 	@Autowired
 	private UserDetService service;
+
+	@Autowired
+	private EntryPoint entryPoint;
+	
+	@Autowired
+	private TokenFilter filter;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -46,84 +56,89 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers("/jwt/**").permitAll()
 			//producto
 			.antMatchers(HttpMethod.GET,"/producto").permitAll()
-			.antMatchers(HttpMethod.POST,"/producto").hasAnyRole(Roles.ROLE_ADMIN.name(),Roles.ROLE_CLIENTE.name(),Roles.ROLE_MASTER.name())
-			.antMatchers(HttpMethod.PUT,"/producto/{id}").hasAnyRole(Roles.ROLE_ADMIN.name(),Roles.ROLE_CLIENTE.name(),Roles.ROLE_MASTER.name())
+			.antMatchers(HttpMethod.POST,"/producto").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name())
+			.antMatchers(HttpMethod.PUT,"/producto/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name())
 			//admin
-			.antMatchers(HttpMethod.GET,"/empleado").hasAnyRole(Roles.ROLE_ADMIN.name(),Roles.ROLE_MASTER.name())
-			.antMatchers(HttpMethod.GET,"/empleado/*").hasAnyRole(Roles.ROLE_ADMIN.name(),Roles.ROLE_MASTER.name())
-			.antMatchers(HttpMethod.POST,"/empleado").hasAnyRole(Roles.ROLE_MASTER.name())
-			.antMatchers(HttpMethod.PUT,"/empleado/{id}").hasAnyRole(Roles.ROLE_MASTER.name())
+			.antMatchers(HttpMethod.GET,"/empleado/*").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name())
+			.antMatchers(HttpMethod.POST,"/empleado").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.PUT,"/empleado/{id}").hasAnyRole(Roles.MASTER.name())
 			//categoria
-			.antMatchers(HttpMethod.GET,"/categoria").permitAll()
 			.antMatchers(HttpMethod.GET,"/categoria/*").permitAll()
-			.antMatchers(HttpMethod.POST,"/categoria").hasAnyRole(Roles.ROLE_ADMIN.name(),Roles.ROLE_CLIENTE.name(),Roles.ROLE_MASTER.name())
-			.antMatchers(HttpMethod.PUT,"/categoria/{id}").hasAnyRole(Roles.ROLE_ADMIN.name(),Roles.ROLE_CLIENTE.name(),Roles.ROLE_MASTER.name())
+			.antMatchers(HttpMethod.POST,"/categoria").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name())
+			.antMatchers(HttpMethod.PUT,"/categoria/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name())
 			//cliente
-			.antMatchers(HttpMethod.GET,"/cliente/{id}").hasAnyRole(Roles.ROLE_ADMIN.name(),Roles.ROLE_CLIENTE.name(),Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name(),Roles.ROLE_DELIVERY.name())
-			.antMatchers(HttpMethod.GET,"/cliente").hasAnyRole(Roles.ROLE_ADMIN.name(),Roles.ROLE_CLIENTE.name(),Roles.ROLE_MASTER.name(),Roles.ROLE_DELIVERY.name())
-			.antMatchers(HttpMethod.POST,"/cliente").hasAnyRole(Roles.ROLE_ADMIN.name(),Roles.ROLE_CLIENTE.name(),Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
-			.antMatchers(HttpMethod.PUT,"/cliente/{id}").hasAnyRole(Roles.ROLE_ADMIN.name(),Roles.ROLE_CLIENTE.name(),Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
+			.antMatchers(HttpMethod.GET,"/cliente/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
+			.antMatchers(HttpMethod.GET,"/cliente").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name(),Roles.DELIVERY.name())
+			.antMatchers(HttpMethod.POST,"/cliente").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.PUT,"/cliente/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name(),Roles.CLIENTE.name())
 			//historial venta
-			.antMatchers(HttpMethod.GET,"/historial/{id}").hasAnyRole(Roles.ROLE_ADMIN.name(),Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name(),Roles.ROLE_DELIVERY.name())
-			.antMatchers(HttpMethod.POST,"/historial").hasAnyRole(Roles.ROLE_ADMIN.name(),Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name(),Roles.ROLE_DELIVERY.name())
-			.antMatchers(HttpMethod.PUT,"/historial/{id}").hasAnyRole(Roles.ROLE_ADMIN.name(),Roles.ROLE_CLIENTE.name(),Roles.ROLE_MASTER.name(),Roles.ROLE_DELIVERY.name())
+			.antMatchers(HttpMethod.GET,"/historial/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
+			.antMatchers(HttpMethod.POST,"/historial").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
+			.antMatchers(HttpMethod.PUT,"/historial/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name(),Roles.DELIVERY.name())
 			//orden
-			.antMatchers(HttpMethod.GET,"/orden/{id}").hasAnyRole(Roles.ROLE_ADMIN.name(),Roles.ROLE_CLIENTE.name(),Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name(),Roles.ROLE_DELIVERY.name())
-			.antMatchers(HttpMethod.POST,"/orden").hasAnyRole(Roles.ROLE_ADMIN.name(),Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name(),Roles.ROLE_DELIVERY.name())
-			.antMatchers(HttpMethod.PUT,"/orden/{id}").hasAnyRole(Roles.ROLE_ADMIN.name(),Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name(),Roles.ROLE_DELIVERY.name())
+			.antMatchers(HttpMethod.GET,"/orden/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
+			.antMatchers(HttpMethod.POST,"/orden").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
+			.antMatchers(HttpMethod.PUT,"/orden/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
 			//proveedor
-			.antMatchers(HttpMethod.GET,"/proveedor/{id}").hasAnyRole(Roles.ROLE_MASTER.name())
-			.antMatchers(HttpMethod.GET,"/proveedor").hasAnyRole(Roles.ROLE_MASTER.name())
-			.antMatchers(HttpMethod.POST,"/proveedor").hasAnyRole(Roles.ROLE_MASTER.name())
-			.antMatchers(HttpMethod.PUT,"/proveedor/{id}").hasAnyRole(Roles.ROLE_MASTER.name())
+			.antMatchers(HttpMethod.GET,"/proveedor/{id}").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.GET,"/proveedor").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.POST,"/proveedor").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.PUT,"/proveedor/{id}").hasAnyRole(Roles.MASTER.name())
 			//ruc
-			.antMatchers(HttpMethod.GET,"/ruc/{id}").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
-			.antMatchers(HttpMethod.GET,"/ruc").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
-			.antMatchers(HttpMethod.POST,"/ruc").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
-			.antMatchers(HttpMethod.PUT,"/ruc/{id}").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
+			.antMatchers(HttpMethod.GET,"/ruc/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.GET,"/ruc").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.POST,"/ruc").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.PUT,"/ruc/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			//subcategoria
-			.antMatchers(HttpMethod.GET,"/subcategoria/{id}").hasAnyRole(Roles.ROLE_MASTER.name())
-			.antMatchers(HttpMethod.GET,"/subcategoria").hasAnyRole(Roles.ROLE_MASTER.name())
-			.antMatchers(HttpMethod.POST,"/subcategoria").hasAnyRole(Roles.ROLE_MASTER.name())
-			.antMatchers(HttpMethod.PUT,"/subcategoria/{id}").hasAnyRole(Roles.ROLE_MASTER.name())
+			.antMatchers(HttpMethod.GET,"/subcategoria/{id}").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.GET,"/subcategoria").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.POST,"/subcategoria").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.PUT,"/subcategoria/{id}").hasAnyRole(Roles.MASTER.name())
 			//subtipo
-			.antMatchers(HttpMethod.GET,"/subtipo/{id}").hasAnyRole(Roles.ROLE_MASTER.name())
-			.antMatchers(HttpMethod.GET,"/subtipo").hasAnyRole(Roles.ROLE_MASTER.name())
-			.antMatchers(HttpMethod.POST,"/subtipo").hasAnyRole(Roles.ROLE_MASTER.name())
-			.antMatchers(HttpMethod.PUT,"/subtipo/{id}").hasAnyRole(Roles.ROLE_MASTER.name())
+			.antMatchers(HttpMethod.GET,"/subtipo/{id}").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.GET,"/subtipo").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.POST,"/subtipo").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.PUT,"/subtipo/{id}").hasAnyRole(Roles.MASTER.name())
 			//tarjeta
-			.antMatchers(HttpMethod.GET,"/tarjeta/{id}").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
-			.antMatchers(HttpMethod.GET,"/tarjeta").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
-			.antMatchers(HttpMethod.POST,"/tarjeta").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
-			.antMatchers(HttpMethod.PUT,"/tarjeta/{id}").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
+			.antMatchers(HttpMethod.GET,"/tarjeta/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.GET,"/tarjeta").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.POST,"/tarjeta").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.PUT,"/tarjeta/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			//tienda
-			.antMatchers(HttpMethod.GET,"/tienda/{id}").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_ADMIN.name())
-			.antMatchers(HttpMethod.GET,"/tienda").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_ADMIN.name())
-			.antMatchers(HttpMethod.POST,"/tienda").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_ADMIN.name())
-			.antMatchers(HttpMethod.PUT,"/tienda/{id}").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_ADMIN.name())
+			.antMatchers(HttpMethod.GET,"/tienda/{id}").hasAnyRole(Roles.MASTER.name(),Roles.ADMIN.name())
+			.antMatchers(HttpMethod.GET,"/tienda").hasAnyRole(Roles.MASTER.name(),Roles.ADMIN.name())
+			.antMatchers(HttpMethod.POST,"/tienda").hasAnyRole(Roles.MASTER.name(),Roles.ADMIN.name())
+			.antMatchers(HttpMethod.PUT,"/tienda/{id}").hasAnyRole(Roles.MASTER.name(),Roles.ADMIN.name())
 			//tipo
-			.antMatchers(HttpMethod.GET,"/tipo/{id}").hasAnyRole(Roles.ROLE_MASTER.name())
-			.antMatchers(HttpMethod.GET,"/tipo").hasAnyRole(Roles.ROLE_MASTER.name())
-			.antMatchers(HttpMethod.POST,"/tipo").hasAnyRole(Roles.ROLE_MASTER.name())
-			.antMatchers(HttpMethod.PUT,"/tipo/{id}").hasAnyRole(Roles.ROLE_MASTER.name())
+			.antMatchers(HttpMethod.GET,"/tipo/{id}").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.GET,"/tipo").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.POST,"/tipo").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.PUT,"/tipo/{id}").hasAnyRole(Roles.MASTER.name())
 			//usuario
-			.antMatchers(HttpMethod.GET,"/usuario/{id}").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
-			.antMatchers(HttpMethod.GET,"/usuario").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
-			.antMatchers(HttpMethod.POST,"/usuario").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
-			.antMatchers(HttpMethod.PUT,"/usuario/{id}").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
+			.antMatchers(HttpMethod.GET,"/usuario/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.GET,"/usuario").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.POST,"/usuario").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.PUT,"/usuario/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			//pedido
-			.antMatchers(HttpMethod.GET,"/pedido/{id}").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
-			.antMatchers(HttpMethod.GET,"/pedido").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
-			.antMatchers(HttpMethod.POST,"/pedido").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
-			.antMatchers(HttpMethod.PUT,"/pedido/{id}").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
+			.antMatchers(HttpMethod.GET,"/pedido/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.GET,"/pedido").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.POST,"/pedido").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.PUT,"/pedido/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			//historialpedido
-			.antMatchers(HttpMethod.GET,"/historialpedido/{id}").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
-			.antMatchers(HttpMethod.GET,"/historialpedido").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
-			.antMatchers(HttpMethod.POST,"/historialpedido").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
-			.antMatchers(HttpMethod.PUT,"/historialpedido/{id}").hasAnyRole(Roles.ROLE_MASTER.name(),Roles.ROLE_CLIENTE.name())
+			.antMatchers(HttpMethod.GET,"/historialpedido/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.GET,"/historialpedido").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.POST,"/historialpedido").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.PUT,"/historialpedido/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.anyRequest()
+			.authenticated()
 			.and()
-			.httpBasic()
+			.exceptionHandling()
+			.authenticationEntryPoint(entryPoint)
 			.and()
+			.sessionManagement()
+			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and()
+			.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
 			.csrf().disable();
     }
 
