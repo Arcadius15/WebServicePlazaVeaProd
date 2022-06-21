@@ -8,6 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 import javax.persistence.ForeignKey;
 
 import lombok.Data;
@@ -23,6 +28,11 @@ public class Descripcion {
     private String descripcion;
 
     @ManyToOne
+    @Column(length = 400)
+    private String descripcion;
+
+    @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "id_producto",
         foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key(id_producto) references producto(id_producto)"))
     private Producto producto;
