@@ -51,9 +51,9 @@ public class Pedido {
 
 
     @ManyToOne
-    @JoinColumn(name = "id_admin",
-        foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_admin) references admin(id_admin)"))
-    private Admin admin;
+    @JoinColumn(name = "id_empleado",
+        foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_empleado) references empleado(id_empleado)"))
+    private Empleado empleado;
     
     @ManyToOne
     @JoinColumn(name = "id_tienda",

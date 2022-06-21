@@ -3,8 +3,8 @@ package com.plazavea.webservice.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.plazavea.webservice.model.Admin;
-import com.plazavea.webservice.service.AdminServ;
+import com.plazavea.webservice.model.Empleado;
+import com.plazavea.webservice.service.EmpleadoServ;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,16 +19,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/admin")
-public class AdminController {
+@RequestMapping("/empleado")
+public class EmpleadoController {
 
     @Autowired
-    private AdminServ repository;
+    private EmpleadoServ repository;
 
     @GetMapping
-    public ResponseEntity<List<Admin>> getAll() {
+    public ResponseEntity<List<Empleado>> getAll() {
         try {
-            List<Admin> items = new ArrayList<Admin>();
+            List<Empleado> items = new ArrayList<Empleado>();
 
             repository.listar().forEach(items::add);
 
@@ -42,8 +42,8 @@ public class AdminController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Admin> getById(@PathVariable("id") String id) {
-        Admin item = repository.buscar(id);
+    public ResponseEntity<Empleado> getById(@PathVariable("id") String id) {
+        Empleado item = repository.buscar(id);
 
         if (item!=null) {
             return new ResponseEntity<>(item, HttpStatus.OK);
@@ -53,7 +53,7 @@ public class AdminController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody Admin item) {
+    public ResponseEntity<Void> create(@RequestBody Empleado item) {
         try {
             repository.registrar(item);
             return new ResponseEntity<>( HttpStatus.CREATED);
@@ -63,8 +63,8 @@ public class AdminController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<Void> update(@PathVariable("id") String id, @RequestBody Admin item) {
-        Admin existingItem = repository.buscar(id);
+    public ResponseEntity<Void> update(@PathVariable("id") String id, @RequestBody Empleado item) {
+        Empleado existingItem = repository.buscar(id);
         if (existingItem!=null) {
             repository.editar(existingItem);
             return new ResponseEntity<>(null, HttpStatus.OK);

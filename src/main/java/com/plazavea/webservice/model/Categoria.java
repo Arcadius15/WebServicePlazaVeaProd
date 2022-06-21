@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Data;
 
 @Data
@@ -23,6 +25,7 @@ public class Categoria {
     @Column
     private String nombre;
 
+    @JsonIgnoreProperties({"categoria"})
     @OneToMany(mappedBy = "categoria",cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private List<SubCategoria> subcategorias;
 }

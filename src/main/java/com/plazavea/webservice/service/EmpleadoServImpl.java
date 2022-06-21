@@ -4,28 +4,28 @@ import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.plazavea.webservice.model.Admin;
-import com.plazavea.webservice.repository.AdminRepository;
+import com.plazavea.webservice.model.Empleado;
+import com.plazavea.webservice.repository.EmpleadoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AdminServImpl implements AdminServ{
+public class EmpleadoServImpl implements EmpleadoServ{
 
     @Autowired
-    private AdminRepository repository;
+    private EmpleadoRepository repository;
 
     @Override
     @Transactional
-    public void registrar(Admin admin) {
-        repository.save(admin);
+    public void registrar(Empleado empleado) {
+        repository.save(empleado);
     }
 
     @Override
     @Transactional
-    public void editar(Admin admin) {
-        repository.saveAndFlush(admin);
+    public void editar(Empleado empleado) {
+        repository.saveAndFlush(empleado);
     }
 
     @Override
@@ -36,14 +36,14 @@ public class AdminServImpl implements AdminServ{
 
     @Override
     @Transactional(readOnly = true)
-    public List<Admin> listar() {
+    public List<Empleado> listar() {
         
         return repository.findAll();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Admin buscar(String id) {
+    public Empleado buscar(String id) {
         return repository.findById(id).orElse(null);
     }
     

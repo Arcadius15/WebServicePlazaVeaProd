@@ -1,5 +1,6 @@
 package com.plazavea.webservice.model;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -17,6 +18,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.plazavea.webservice.utils.StringPrefixedSequenceGenerator;
 
 import lombok.Data;
@@ -24,6 +27,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "producto")
+@JsonIgnoreProperties({"proveedor", "subtipo", "productosxtienda", "ordendetalle", "pedidodetalle"})
 public class Producto {
 
     @Id
@@ -39,14 +43,13 @@ public class Producto {
     @Column
     private String imagenUrl;
     @Column
-    private String codigo;
-    @Column
     private Double precioRegular;
     @Column
     private Double precioOferta;
     @Column
-    private String descripcion;
+    private boolean oferta;
 
+    
     @ManyToOne
     @JoinColumn(name = "id_proveedor",
         foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_proveedor) references proveedor(id_proveedor)"))
@@ -60,10 +63,22 @@ public class Producto {
     @OneToMany(mappedBy = "producto",cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private Set<ProductoTienda> productosxtienda;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "producto",cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private Set<OrdenDetalle> ordendetalle;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "producto",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private Set<PedidoDetalle> pedidodetalle;
+
+    @OneToMany(mappedBy = "producto",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    private List<Descripcion> descripciones;
+
+    @OneToMany(mappedBy = "producto",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    private List<Especificaciones> especificaciones;
+
+
+    @OneToMany(mappedBy = "producto",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    private List<Promocion> promociones;
     
 }

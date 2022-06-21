@@ -37,7 +37,6 @@ public class ProductoServImpl implements ProductoServ{
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<Producto> listar() {
         
         return repository.findAll();
