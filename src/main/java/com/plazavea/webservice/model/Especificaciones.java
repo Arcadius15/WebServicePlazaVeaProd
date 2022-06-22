@@ -22,10 +22,6 @@ public class Especificaciones {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idEspec;
-    @Column
-    private String especificacion;
-
-    @ManyToOne
     @Column(length =  1000)
     private String nombre;
     @Column(length = 8000)
