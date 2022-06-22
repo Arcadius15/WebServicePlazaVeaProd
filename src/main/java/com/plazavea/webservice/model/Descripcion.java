@@ -24,10 +24,6 @@ public class Descripcion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idDescripcion;
-    @Column
-    private String descripcion;
-
-    @ManyToOne
     @Column(length = 400)
     private String descripcion;
 
