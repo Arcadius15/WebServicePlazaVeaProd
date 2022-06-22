@@ -17,6 +17,9 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.plazavea.webservice.utils.StringPrefixedSequenceGenerator;
 
@@ -41,14 +44,13 @@ public class Producto {
     @Column
     private String imagenUrl;
     @Column
-    private String codigo;
-    @Column
     private Double precioRegular;
     @Column
     private Double precioOferta;
     @Column
     private boolean oferta;
 
+    
     @ManyToOne
     @JoinColumn(name = "id_proveedor",
         foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_proveedor) references proveedor(id_proveedor)"))
@@ -62,9 +64,11 @@ public class Producto {
     @OneToMany(mappedBy = "producto",cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private Set<ProductoTienda> productosxtienda;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "producto",cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private Set<OrdenDetalle> ordendetalle;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "producto",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private Set<PedidoDetalle> pedidodetalle;
 
@@ -73,6 +77,7 @@ public class Producto {
 
     @OneToMany(mappedBy = "producto",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private List<Especificaciones> especificaciones;
+
 
     @OneToMany(mappedBy = "producto",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private List<Promocion> promociones;
