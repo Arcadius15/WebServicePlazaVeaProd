@@ -1,12 +1,12 @@
 package com.plazavea.webservice.controller;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import com.plazavea.webservice.model.Producto;
 import com.plazavea.webservice.service.ProductoServ;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,11 +26,9 @@ public class ProductoController {
     private ProductoServ repository;
 
     @GetMapping
-    public ResponseEntity<List<Producto>> getAll() {
+    public ResponseEntity<Page<Producto>> getAll(Pageable page) {
         try {
-            List<Producto> items = new ArrayList<Producto>();
-
-            repository.listar().forEach(items::add);
+            Page<Producto> items =repository.listar(page);
 
             if (items.isEmpty())
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
