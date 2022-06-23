@@ -1,11 +1,12 @@
 package com.plazavea.webservice.service;
 
-import java.util.List;
 
 import com.plazavea.webservice.model.Producto;
 import com.plazavea.webservice.repository.ProductoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,9 +38,9 @@ public class ProductoServImpl implements ProductoServ{
     }
 
     @Override
-    public List<Producto> listar() {
+    public Page<Producto> listar(Pageable page) {
         
-        return repository.findAll();
+        return repository.findAll(page);
     }
 
     @Override

@@ -1,12 +1,12 @@
 package com.plazavea.webservice.controller;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import com.plazavea.webservice.model.Subtipo;
 import com.plazavea.webservice.service.SubtipoServ;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,11 +26,9 @@ public class SubtipoController {
     private SubtipoServ repository;
 
     @GetMapping
-    public ResponseEntity<List<Subtipo>> getAll() {
+    public ResponseEntity<Page<Subtipo>> getAll(Pageable page) {
         try {
-            List<Subtipo> items = new ArrayList<Subtipo>();
-
-            repository.listar().forEach(items::add);
+            Page<Subtipo> items = repository.listar(page);
 
             if (items.isEmpty())
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
