@@ -42,6 +42,10 @@ public class Tienda {
     @Column
     private String direccion;
     @Column
+    private Long lat;
+    @Column
+    private Long lng;
+    @Column
     private String numeroTelefonico;
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
