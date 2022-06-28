@@ -78,7 +78,9 @@ public class UserDetService implements UserDetailsService{
                     }
                 break;
                 case "master":
-                    roles.add(rolServ.getByRolNombre(Roles.MASTER).get());
+                    if (repository.findByRoles_Rol(Roles.MASTER).size()<1) {
+                        roles.add(rolServ.getByRolNombre(Roles.MASTER).get());
+                    }
                 break;
             }
         }
