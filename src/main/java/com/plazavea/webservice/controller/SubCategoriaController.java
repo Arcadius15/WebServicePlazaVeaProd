@@ -1,14 +1,22 @@
 package com.plazavea.webservice.controller;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import javax.validation.constraints.NotNull;
+
+import com.plazavea.webservice.dto.SubcategoriaReq;
+import com.plazavea.webservice.dto.SubcategoriaRes;
 import com.plazavea.webservice.model.SubCategoria;
 import com.plazavea.webservice.service.SubCategoriaServ;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,12 +33,15 @@ public class SubCategoriaController {
     @Autowired
     private SubCategoriaServ repository;
 
-    @GetMapping
-    public ResponseEntity<List<SubCategoria>> getAll() {
-        try {
-            List<SubCategoria> items = new ArrayList<SubCategoria>();
+    @Autowired
+    private ModelMapper mapper;
 
-            repository.listar().forEach(items::add);
+    @GetMapping
+    public ResponseEntity<List<SubcategoriaRes>> getAll() {
+        try {
+            List<SubcategoriaRes> items = new ArrayList<SubcategoriaRes>();
+            repository.listar().forEach(x-> 
+                items.add(mapper.map(x, SubcategoriaRes.class)));
 
             if (items.isEmpty())
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -42,8 +53,8 @@ public class SubCategoriaController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<SubCategoria> getById(@PathVariable("id") int id) {
-        SubCategoria item = repository.buscar(id);
+    public ResponseEntity<SubcategoriaRes> getById(@PathVariable("id") int id) {
+        SubcategoriaRes item = mapper.map(repository.buscar(id), SubcategoriaRes.class);
 
         if (item!=null) {
             return new ResponseEntity<>(item, HttpStatus.OK);
@@ -53,9 +64,9 @@ public class SubCategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody SubCategoria item) {
+    public ResponseEntity<Void> create(@RequestBody SubcategoriaReq item) {
         try {
-            repository.registrar(item);
+            repository.registrar(mapper.map(item, SubCategoria.class));
             return new ResponseEntity<>( HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
@@ -63,9 +74,14 @@ public class SubCategoriaController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody SubCategoria item) {
+    public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody Map<@NotNull Object,@NotNull Object> item) {
         SubCategoria existingItem = repository.buscar(id);
         if (existingItem!=null) {
+            item.forEach((key,value)->{
+                Field field = ReflectionUtils.findField(SubCategoria.class, (String) key);
+                field.setAccessible(true);
+				ReflectionUtils.setField(field, existingItem, value);
+            });
             repository.editar(existingItem);
             return new ResponseEntity<>(null, HttpStatus.OK);
         } else {
