@@ -4,11 +4,17 @@ package com.plazavea.webservice.controller;
 import com.plazavea.webservice.model.Subtipo;
 import com.plazavea.webservice.service.SubtipoServ;
 
+import java.lang.reflect.Field;
+import java.util.Map;
+
+import javax.validation.constraints.NotNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -61,9 +67,14 @@ public class SubtipoController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody Subtipo item) {
+    public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody Map<@NotNull Object,@NotNull Object> item) {
         Subtipo existingItem = repository.buscar(id);
         if (existingItem!=null) {
+        	item.forEach((key,value)->{
+        		Field field = ReflectionUtils.findField(Subtipo.class, (String) key);
+                field.setAccessible(true);
+				ReflectionUtils.setField(field, existingItem, value);
+        	});
             repository.editar(existingItem);
             return new ResponseEntity<>(null, HttpStatus.OK);
         } else {
