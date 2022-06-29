@@ -1,7 +1,11 @@
 package com.plazavea.webservice.controller;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import javax.validation.constraints.NotNull;
 
 import com.plazavea.webservice.model.Cliente;
 import com.plazavea.webservice.service.ClienteServ;
@@ -9,6 +13,7 @@ import com.plazavea.webservice.service.ClienteServ;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -64,9 +69,14 @@ public class ClienteController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<Void> update(@PathVariable("id") String id, @RequestBody Cliente item) {
+    public ResponseEntity<Void> update(@PathVariable("id") String id, @RequestBody Map<@NotNull Object,@NotNull Object> item) {
         Cliente existingItem = repository.buscar(id);
         if (existingItem!=null) {
+        	item.forEach((key,value)->{
+        		Field field = ReflectionUtils.findField(Cliente.class, (String) key);
+                field.setAccessible(true);
+				ReflectionUtils.setField(field, existingItem, value);
+        	});
             repository.editar(existingItem);
             return new ResponseEntity<>(null, HttpStatus.OK);
         } else {
