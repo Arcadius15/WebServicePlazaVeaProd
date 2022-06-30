@@ -46,27 +46,60 @@ public class JwtAuthController {
 	@PostMapping(value = "/authenticate")
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtReq authenticationRequest) throws Exception {
 
-		authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
-
-		final UserDetails userDetails = service.loadUserByUsername(authenticationRequest.getEmail());
-
+        authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+		
+        final UserDetails userDetails = service.loadUserByUsername(authenticationRequest.getEmail());
+		
 		final String token = jwtUtil.generateToken(userDetails);
 
 		return ResponseEntity.ok(new TokenRes(token));
 	}
 
     @PostMapping(value = "/registro")
-	public ResponseEntity<?> saveUser(@Valid @RequestBody UsuarioReq user,BindingResult bindingResult) throws Exception {
+	public ResponseEntity<?> saveCliente(@Valid @RequestBody UsuarioReq user,BindingResult bindingResult) throws Exception {
         if(bindingResult.hasErrors())
             return ResponseEntity.badRequest().body(new Mensaje("campos mal puestos o email inválido"));
         if(usuarioServ.existByEmail(user.getEmail()))
             return ResponseEntity.badRequest().body(new Mensaje("email ya existe"));
-        Usuario userSave = service.save(user);
+        for (String rol : user.getRoles()) {
+            if (rol.toLowerCase().equals("cliente")) {
+                Usuario userSave = service.save(user);
+                if (userSave!=null) {
+                    return ResponseEntity.ok(userSave); 
+                }
+            }
+        }
+        return ResponseEntity.badRequest().body(new Mensaje("No se definio tipo de usuario"));
+	}
+
+    @PostMapping(value = "/registro/empleado")
+	public ResponseEntity<?> saveEmpleado(@Valid @RequestBody UsuarioReq user,BindingResult bindingResult) throws Exception {
+        if(bindingResult.hasErrors())
+            return ResponseEntity.badRequest().body(new Mensaje("campos mal puestos o email inválido"));
+        if(usuarioServ.existByEmail(user.getEmail()))
+            return ResponseEntity.badRequest().body(new Mensaje("email ya existe"));
+        if(user.getRoles().size()>1)
+            return ResponseEntity.badRequest().body(new Mensaje("Solo se puede ingresar un Rol por Usuario"));
+        Usuario userSave = null;
+        for (String rol : user.getRoles()) {
+            if (rol.toLowerCase().equals("empleado")) {
+                userSave = service.save(user);
+                break;
+            }else if(rol.toLowerCase().equals("repartidor")){
+                userSave = service.save(user);
+                break;
+            }else if(rol.toLowerCase().equals("admin")){
+                userSave = service.save(user);
+                break;
+            }
+        }
         if (userSave!=null) {
             return ResponseEntity.ok(userSave); 
         }
-		return ResponseEntity.badRequest().body(new Mensaje("No se definio tipo de usuario"));
+        return ResponseEntity.badRequest().body(new Mensaje("Usuario Invalido"));
 	}
+
+
 
     private void authenticate(String username, String password) throws Exception {
 		try {
@@ -77,5 +110,4 @@ public class JwtAuthController {
 			throw new Exception("INVALID_CREDENTIALS", e);
 		}
 	}
-
 }

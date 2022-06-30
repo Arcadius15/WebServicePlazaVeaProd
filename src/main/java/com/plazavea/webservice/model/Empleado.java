@@ -14,6 +14,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.plazavea.webservice.security.model.Usuario;
 import com.plazavea.webservice.utils.StringPrefixedSequenceGenerator;
 
@@ -27,7 +28,7 @@ import lombok.Data;
 @Table(name = "empleado")
 public class Empleado {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "admin_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "empleado_seq")
     @GenericGenerator(name = "empleado_seq",strategy = "com.plazavea.webservice.utils.StringPrefixedSequenceGenerator",parameters = {
         @Parameter(name = StringPrefixedSequenceGenerator.INCREMENT_PARAM,value = "1"),
         @Parameter(name = StringPrefixedSequenceGenerator.VALUE_PREFIX_PARAMETER,value = "USR_"),
@@ -47,12 +48,15 @@ public class Empleado {
     private int numTelefonico;
 
     @OneToOne
+    @JsonIgnoreProperties({"empleado"})
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
     private Usuario usuario;
 
     @OneToMany(mappedBy = "empleado")
+    @JsonIgnoreProperties({"empleado"})
     private List<Tienda> tienda;
 
     @OneToMany(mappedBy = "empleado")
+    @JsonIgnoreProperties({"empleado"})
     private List<Pedido> pedidos;
 }
