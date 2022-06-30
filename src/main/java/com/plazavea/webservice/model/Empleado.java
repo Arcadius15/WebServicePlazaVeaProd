@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -39,13 +40,14 @@ public class Empleado {
     private String nombres;
     @Column
     private String apellidos;
-    @Column
-    private int dni;
+    @Column(nullable = false,length = 8)
+    private String dni;
     @Column
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaNacimiento;
     @Column
-    private int numTelefonico;
+    @Pattern(regexp="(^$|[0-9]{9})")
+    private String numTelefonico;
 
     @OneToOne
     @JsonIgnoreProperties({"empleado"})

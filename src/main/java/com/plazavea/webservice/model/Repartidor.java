@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.plazavea.webservice.enums.RepartidorStatus;
@@ -42,7 +43,7 @@ public class Repartidor {
     private String nombre;
     @Column
     private String apellidos;
-    @Column
+    @Column(nullable = false,length = 8)
     private String dni;
     @Column
     private String direccion;
@@ -50,6 +51,7 @@ public class Repartidor {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaNacimiento;
     @Column
+    @Pattern(regexp="(^$|[0-9]{9})")
     private String numTelefonico;
     @Column(columnDefinition = "BYTEA")
     private byte[] foto;

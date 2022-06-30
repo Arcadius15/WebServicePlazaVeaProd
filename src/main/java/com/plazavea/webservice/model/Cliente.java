@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.plazavea.webservice.security.model.Usuario;
@@ -45,7 +46,8 @@ public class Cliente {
     @Column
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaNacimiento;
-    @Column(nullable = false,length = 9)
+    @Column
+    @Pattern(regexp="(^$|[0-9]{9})")
     private String numTelefonico;
 
     @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
