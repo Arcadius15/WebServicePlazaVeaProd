@@ -34,7 +34,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        
 		auth.userDetailsService(service).passwordEncoder(encriptado());
     }
 
@@ -53,7 +52,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-			.antMatchers("/jwt/**").permitAll()
+			.antMatchers(HttpMethod.POST,"/jwt/authenticate").permitAll()
+			.antMatchers("/jwt/registro/empleado").hasAnyRole(Roles.MASTER.name(),Roles.ADMIN.name())
 			//producto
 			.antMatchers(HttpMethod.GET,"/producto").permitAll()
 			.antMatchers(HttpMethod.POST,"/producto").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name())

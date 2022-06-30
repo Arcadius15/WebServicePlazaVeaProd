@@ -10,6 +10,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
+
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -19,11 +20,13 @@ public class EntryPoint implements AuthenticationEntryPoint{
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
 		try {
-			log.info("Mensaje");
+			log.info(authException.getMessage());
+			response.setHeader("Error", authException.getMessage());
 		} catch (Exception e) {
 			log.warn("error");
 		}
 		response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"No esta autorizado");
 		
 	}
+
 }

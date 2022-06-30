@@ -1,15 +1,11 @@
 package com.plazavea.webservice.security.service;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,6 +18,10 @@ import com.plazavea.webservice.security.enums.Roles;
 import com.plazavea.webservice.security.model.Rol;
 import com.plazavea.webservice.security.model.Usuario;
 import com.plazavea.webservice.security.repository.UsuarioRepository;
+import com.plazavea.webservice.security.utils.AccountStatusUserDetailsChecker;
+
+import static java.util.Optional.ofNullable;
+
 
 @Service
 public class UserDetService implements UserDetailsService{
@@ -35,20 +35,23 @@ public class UserDetService implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Usuario user = repository.findByEmail(email).get();
-        if (user!=null) {
-            List<GrantedAuthority> roles = new ArrayList<GrantedAuthority>();
-            user.getRoles().forEach(x-> roles.add(new SimpleGrantedAuthority("ROLE_" + x.getRol().name()))); 
-            return new User(user.getEmail(),user.getPassword(),roles);
-        }else{
-            throw new UsernameNotFoundException("El usuario no existe");
-        }
+        return
+        ofNullable(email)
+                .flatMap(un -> repository.findByEmail(un))
+                .map(u ->  {
+                    new AccountStatusUserDetailsChecker().check(u);
+                    return u;
+                })
+                .orElseThrow(() -> new UsernameNotFoundException(String.format("Username: %s not found in database", email)));
     }
 
     public Usuario save(UsuarioReq userReq){
         Usuario user = new Usuario();
         user.setEmail(userReq.getEmail());
         user.setPassword(encriptador().encode(userReq.getPassword()));
+        user.setBlocked(false);
+        user.setActivo(true);
+        user.setPswExp(LocalDate.now().plusMonths(1));
         Set<Rol> roles = new HashSet<>();
         roles.add(rolServ.getByRolNombre(Roles.USER).get());
         for (String rolReq : userReq.getRoles()) {
@@ -56,24 +59,28 @@ public class UserDetService implements UserDetailsService{
                 case "repartidor":
                     if (userReq.getRepartidor()!=null) {
                         user.setRepartidor(userReq.getRepartidor());
+                        user.getRepartidor().setUsuario(user);
                         roles.add(rolServ.getByRolNombre(Roles.DELIVERY).get());
                     }
                     break;
                 case "cliente":
                     if (userReq.getCliente()!=null) {
                         user.setCliente(userReq.getCliente());
+                        user.getCliente().setUsuario(user);
                         roles.add(rolServ.getByRolNombre(Roles.CLIENTE).get());
                     }
                 break;
                 case "empleado":
                     if (userReq.getEmpleado()!=null) {
                         user.setEmpleado(userReq.getEmpleado());
+                        user.getEmpleado().setUsuario(user);
                         roles.add(rolServ.getByRolNombre(Roles.EMPLEADO).get());
                     }
                 break;
                 case "admin":
                     if (userReq.getEmpleado()!=null) {
                         user.setEmpleado(userReq.getEmpleado());
+                        user.getEmpleado().setUsuario(user);
                         roles.add(rolServ.getByRolNombre(Roles.ADMIN).get());
                     }
                 break;
@@ -84,7 +91,7 @@ public class UserDetService implements UserDetailsService{
                 break;
             }
         }
-        if (roles.size()==1) {
+        if (roles.size()==1 || roles.size()>2) {
             return null;
         }
         user.setRoles(roles);
