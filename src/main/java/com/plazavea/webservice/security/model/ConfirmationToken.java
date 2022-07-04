@@ -27,7 +27,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ConfirmationToken {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long idToken;
 
     @Column(name="confirmation_token")

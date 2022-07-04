@@ -18,9 +18,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.plazavea.webservice.utils.StringPrefixedSequenceGenerator;
 
 import lombok.Data;
@@ -28,7 +25,6 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "producto")
-@JsonIgnoreProperties({"proveedor", "subtipo", "productosxtienda", "ordendetalle", "pedidodetalle"})
 public class Producto {
 
     @Id
@@ -52,13 +48,12 @@ public class Producto {
 
     
     @ManyToOne
-    @JsonIgnoreProperties({"productos"})
     @JoinColumn(name = "id_proveedor",
         foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_proveedor) references proveedor(id_proveedor)"))
     private Proveedor proveedor;
 
+    
     @ManyToOne
-    @JsonIgnoreProperties({"tipo","productos"})
     @JoinColumn(name = "id_subtipo",
         foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_subtipo) references subtipo(id_subtipo)"))
     private Subtipo subtipo;
@@ -66,23 +61,18 @@ public class Producto {
     @OneToMany(mappedBy = "producto",cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private Set<ProductoTienda> productosxtienda;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "producto",cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private Set<OrdenDetalle> ordendetalle;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "producto",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private Set<PedidoDetalle> pedidodetalle;
 
-    @JsonIgnoreProperties({"producto"})
     @OneToMany(mappedBy = "producto",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private List<Descripcion> descripciones;
 
-    @JsonIgnoreProperties({"producto"})
     @OneToMany(mappedBy = "producto",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private List<Especificaciones> especificaciones;
 
-    @JsonIgnoreProperties({"producto"})
     @OneToMany(mappedBy = "producto",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private List<Promocion> promociones;
     
