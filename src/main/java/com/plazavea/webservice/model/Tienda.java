@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.plazavea.webservice.utils.StringPrefixedSequenceGenerator;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -55,16 +56,20 @@ public class Tienda {
     private LocalTime horarioC;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "id_empleado",nullable = false,
         foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_empleado) references empleado(id_empleado)"))
     private Empleado empleado;
     
     @OneToMany(mappedBy = "tienda",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @JsonIgnore
     private Set<ProductoTienda> productosxtienda;
 
     @OneToMany(mappedBy = "tienda")
+    @JsonIgnore
     private List<Orden> ordenes;
 
     @OneToMany(mappedBy = "tienda",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    @JsonIgnore
     private List<Pedido> pedidos;
 }
