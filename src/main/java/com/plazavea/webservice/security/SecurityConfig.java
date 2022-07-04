@@ -54,8 +54,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         http.authorizeRequests()
 			.antMatchers(HttpMethod.POST,"/jwt/authenticate").permitAll()
 			.antMatchers("/jwt/registro/empleado").hasAnyRole(Roles.MASTER.name(),Roles.ADMIN.name())
+			.antMatchers("/jwt/registro").permitAll()
 			//producto
 			.antMatchers(HttpMethod.GET,"/producto").permitAll()
+			.antMatchers(HttpMethod.GET,"/producto/{id}").permitAll()
 			.antMatchers(HttpMethod.POST,"/producto").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name())
 			.antMatchers(HttpMethod.PUT,"/producto/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name())
 			//admin
@@ -90,13 +92,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers(HttpMethod.POST,"/ruc").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			.antMatchers(HttpMethod.PUT,"/ruc/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			//subcategoria
-			.antMatchers(HttpMethod.GET,"/subcategoria/{id}").hasAnyRole(Roles.MASTER.name())
-			.antMatchers(HttpMethod.GET,"/subcategoria").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.GET,"/subcategoria/{id}").permitAll()
+			.antMatchers(HttpMethod.GET,"/subcategoria").permitAll()
 			.antMatchers(HttpMethod.POST,"/subcategoria").hasAnyRole(Roles.MASTER.name())
 			.antMatchers(HttpMethod.PUT,"/subcategoria/{id}").hasAnyRole(Roles.MASTER.name())
 			//subtipo
-			.antMatchers(HttpMethod.GET,"/subtipo/{id}").hasAnyRole(Roles.MASTER.name())
-			.antMatchers(HttpMethod.GET,"/subtipo").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.GET,"/subtipo/{id}").permitAll()
+			.antMatchers(HttpMethod.GET,"/subtipo").permitAll()
 			.antMatchers(HttpMethod.POST,"/subtipo").hasAnyRole(Roles.MASTER.name())
 			.antMatchers(HttpMethod.PUT,"/subtipo/{id}").hasAnyRole(Roles.MASTER.name())
 			//tarjeta
@@ -105,13 +107,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers(HttpMethod.POST,"/tarjeta").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			.antMatchers(HttpMethod.PUT,"/tarjeta/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			//tienda
-			.antMatchers(HttpMethod.GET,"/tienda/{id}").hasAnyRole(Roles.MASTER.name(),Roles.ADMIN.name())
-			.antMatchers(HttpMethod.GET,"/tienda").hasAnyRole(Roles.MASTER.name(),Roles.ADMIN.name())
+			.antMatchers(HttpMethod.GET,"/tienda/{id}").permitAll()
+			.antMatchers(HttpMethod.GET,"/tienda").permitAll()
 			.antMatchers(HttpMethod.POST,"/tienda").hasAnyRole(Roles.MASTER.name(),Roles.ADMIN.name())
 			.antMatchers(HttpMethod.PUT,"/tienda/{id}").hasAnyRole(Roles.MASTER.name(),Roles.ADMIN.name())
 			//tipo
-			.antMatchers(HttpMethod.GET,"/tipo/{id}").hasAnyRole(Roles.MASTER.name())
-			.antMatchers(HttpMethod.GET,"/tipo").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.GET,"/tipo/{id}").permitAll()
+			.antMatchers(HttpMethod.GET,"/tipo").permitAll()
 			.antMatchers(HttpMethod.POST,"/tipo").hasAnyRole(Roles.MASTER.name())
 			.antMatchers(HttpMethod.PUT,"/tipo/{id}").hasAnyRole(Roles.MASTER.name())
 			//usuario
