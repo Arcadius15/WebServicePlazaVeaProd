@@ -110,7 +110,7 @@ public class UserDetService implements UserDetailsService{
             mailMessage.setSubject("Complete Registration!");
             mailMessage.setFrom("diegovic996@gmail.com");
             mailMessage.setText("To confirm your account, please click here : "
-            +"https://plazavea-webservice.herokuapp.com//confirm-account?token="+confirmationToken.getConfirmationToken());
+            +"https://plazavea-webservice.herokuapp.com/confirm-account?token="+confirmationToken.getConfirmationToken());
         try {
             emailSenderService.getMessage(mailMessage);
         } catch (Exception e) {
