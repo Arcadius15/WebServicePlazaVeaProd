@@ -88,6 +88,9 @@ public class Usuario implements UserDetails{
             foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key(id_rol) references rol(id_rol)")))
     private Set<Rol> roles;
 
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+    private ConfirmationToken confirmationToken;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = roles.stream()

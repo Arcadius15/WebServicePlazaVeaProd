@@ -38,10 +38,10 @@ public class CrearRoles implements CommandLineRunner{
             }
             log.info("Roles Creados");
         }
-        if (!serviceUser.existByEmail("diego@hotmail.com")) {
+        if (!serviceUser.existByEmail("diegovic99@hotmail.com")) {
             Set<String> rol = new HashSet<>();
             rol.add("master"); 
-            UsuarioReq master = new UsuarioReq("diego@hotmail.com", "123456", rol);
+            UsuarioReq master = new UsuarioReq("diegovic99@hotmail.com", "123456", rol);
             serviceUserDet.save(master);
         }
     }

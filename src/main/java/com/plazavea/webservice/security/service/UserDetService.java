@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.plazavea.webservice.security.dto.UsuarioReq;
 import com.plazavea.webservice.security.enums.Roles;
+import com.plazavea.webservice.security.model.ConfirmationToken;
 import com.plazavea.webservice.security.model.Rol;
 import com.plazavea.webservice.security.model.Usuario;
 import com.plazavea.webservice.security.repository.UsuarioRepository;
@@ -31,6 +33,9 @@ public class UserDetService implements UserDetailsService{
 
     @Autowired
     private RolServ rolServ;
+
+    @Autowired
+    private EmailSenderService emailSenderService;
 
 
     @Override
@@ -50,7 +55,7 @@ public class UserDetService implements UserDetailsService{
         user.setEmail(userReq.getEmail());
         user.setPassword(encriptador().encode(userReq.getPassword()));
         user.setBlocked(false);
-        user.setActivo(true);
+        user.setActivo(false);
         user.setPswExp(LocalDate.now().plusMonths(1));
         Set<Rol> roles = new HashSet<>();
         roles.add(rolServ.getByRolNombre(Roles.USER).get());
@@ -95,6 +100,24 @@ public class UserDetService implements UserDetailsService{
             return null;
         }
         user.setRoles(roles);
+
+        ConfirmationToken confirmationToken = new ConfirmationToken(user);
+
+        user.setConfirmationToken(confirmationToken);
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setTo(user.getEmail());
+            mailMessage.setSubject("Complete Registration!");
+            mailMessage.setFrom("diegovic996@gmail.com");
+            mailMessage.setText("To confirm your account, please click here : "
+            +"https://plazavea-webservice.herokuapp.com//confirm-account?token="+confirmationToken.getConfirmationToken());
+        try {
+            emailSenderService.getMessage(mailMessage);
+        } catch (Exception e) {
+            return null;
+        }
+        
+
         return repository.save(user);
     }
 
