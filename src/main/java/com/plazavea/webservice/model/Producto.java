@@ -52,11 +52,13 @@ public class Producto {
 
     
     @ManyToOne
+    @JsonIgnoreProperties({"productos"})
     @JoinColumn(name = "id_proveedor",
         foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_proveedor) references proveedor(id_proveedor)"))
     private Proveedor proveedor;
 
     @ManyToOne
+    @JsonIgnoreProperties({"tipo","productos"})
     @JoinColumn(name = "id_subtipo",
         foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_subtipo) references subtipo(id_subtipo)"))
     private Subtipo subtipo;
@@ -72,13 +74,15 @@ public class Producto {
     @OneToMany(mappedBy = "producto",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private Set<PedidoDetalle> pedidodetalle;
 
+    @JsonIgnoreProperties({"producto"})
     @OneToMany(mappedBy = "producto",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private List<Descripcion> descripciones;
 
+    @JsonIgnoreProperties({"producto"})
     @OneToMany(mappedBy = "producto",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private List<Especificaciones> especificaciones;
 
-
+    @JsonIgnoreProperties({"producto"})
     @OneToMany(mappedBy = "producto",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private List<Promocion> promociones;
     
