@@ -6,8 +6,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,13 +18,12 @@ import lombok.Data;
 @Table(name="promocion")
 public class Promocion {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idProm;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long idProm;
     @Column(length = 800)
     private String condicion;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "id_producto",
         foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key(id_producto) references producto(id_producto)"))
     private Producto producto;

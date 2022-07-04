@@ -10,9 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import lombok.Data;
 
 @Data
@@ -20,15 +17,14 @@ import lombok.Data;
 @Table(name = "especificaciones")
 public class Especificaciones {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idEspec;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long idEspec;
     @Column(length =  1000)
     private String nombre;
     @Column(length = 8000)
     private String valor;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "id_producto",
         foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key(id_producto) references producto(id_producto)"))
     private Producto producto;

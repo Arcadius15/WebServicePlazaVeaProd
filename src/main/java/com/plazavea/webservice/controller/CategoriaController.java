@@ -7,9 +7,11 @@ import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
+import com.plazavea.webservice.dto.CategoriaReq;
 import com.plazavea.webservice.model.Categoria;
 import com.plazavea.webservice.service.CategoriaServ;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,9 @@ public class CategoriaController {
 
     @Autowired
     private CategoriaServ repository;
+
+    @Autowired
+    private ModelMapper mapper;
 
     @GetMapping
     public ResponseEntity<List<Categoria>> getAll() {
@@ -68,9 +73,13 @@ public class CategoriaController {
     }
 
     @PostMapping("/lista")
-    public ResponseEntity<Void> createAll(@RequestBody List<Categoria> item) {
+    public ResponseEntity<Void> createAll(@RequestBody List<CategoriaReq> item) {
         try {
-            repository.registrarLista(item);
+            List<Categoria> lista= new ArrayList<>();
+            for (CategoriaReq categoriaReq : item) {
+                 lista.add(mapper.map(categoriaReq, Categoria.class));
+            }
+            repository.registrarLista(lista);
             return new ResponseEntity<>( HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
