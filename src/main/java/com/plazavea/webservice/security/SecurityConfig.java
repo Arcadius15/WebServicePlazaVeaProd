@@ -53,6 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
 			.antMatchers(HttpMethod.POST,"/jwt/authenticate").permitAll()
+			.antMatchers("/confirm-account").permitAll()
 			.antMatchers("/jwt/registro/empleado").hasAnyRole(Roles.MASTER.name(),Roles.ADMIN.name())
 			.antMatchers("/jwt/registro").permitAll()
 			//producto
