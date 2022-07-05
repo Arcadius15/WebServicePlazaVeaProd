@@ -6,17 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.plazavea.webservice.security.dto.TokenRes;
+import com.plazavea.webservice.security.dto.UsuarioPsw;
 import com.plazavea.webservice.security.dto.UsuarioReq;
 import com.plazavea.webservice.security.model.Usuario;
 import com.plazavea.webservice.dto.Mensaje;
@@ -72,6 +75,20 @@ public class JwtAuthController {
         return ResponseEntity.badRequest().body(new Mensaje("No se definio tipo de usuario"));
 	}
 
+    @PutMapping(value = "/editpassword")
+    public ResponseEntity<?> editPasswordCliente(@Valid @RequestBody UsuarioPsw user,BindingResult bindingResult) throws Exception{
+        if(bindingResult.hasErrors())
+            return ResponseEntity.badRequest().body(new Mensaje("campos mal puestos o email inválido"));
+        if(!usuarioServ.existByEmail(user.getEmail()))
+            return ResponseEntity.badRequest().body(new Mensaje("email no existe"));
+        Usuario usuario =  service.editPsw(user);
+        if (usuario!=null) {
+            return ResponseEntity.ok(new Mensaje("Contraseña Actualizada exitosamente"));
+        }
+        return ResponseEntity.badRequest().body(new Mensaje("Contraseña Invalida"));
+
+    }
+
     @PostMapping(value = "/registro/empleado")
 	public ResponseEntity<?> saveEmpleado(@Valid @RequestBody UsuarioReq user,BindingResult bindingResult) throws Exception {
         if(bindingResult.hasErrors())
@@ -108,6 +125,8 @@ public class JwtAuthController {
 			throw new Exception("USER_DISABLED", e);
 		} catch (BadCredentialsException e) {
 			throw new Exception("INVALID_CREDENTIALS", e);
-		}
+		}catch(CredentialsExpiredException e){
+            throw new Exception("EXPIRED_CREDENTIALS", e);
+        }
 	}
 }
