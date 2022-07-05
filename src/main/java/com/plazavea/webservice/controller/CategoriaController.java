@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.validation.constraints.NotNull;
 
 import com.plazavea.webservice.dto.CategoriaReq;
+import com.plazavea.webservice.dto.CategoriaRes;
 import com.plazavea.webservice.model.Categoria;
 import com.plazavea.webservice.service.CategoriaServ;
 
@@ -36,24 +37,24 @@ public class CategoriaController {
     private ModelMapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<Categoria>> getAll() {
+    public ResponseEntity<List<CategoriaRes>> getAll() {
         try {
-            List<Categoria> items = new ArrayList<Categoria>();
+            List<CategoriaRes> dto = new ArrayList<>();
+            List<Categoria> items =repository.listar();
+            items.forEach(x-> dto.add(mapper.map(x, CategoriaRes.class)));
 
-            repository.listar().forEach(items::add);
-
-            if (items.isEmpty())
+            if (dto.isEmpty())
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-            return new ResponseEntity<>(items, HttpStatus.OK);
+            return new ResponseEntity<>(dto, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Categoria> getById(@PathVariable("id") int id) {
-        Categoria item = repository.buscar(id);
+    public ResponseEntity<CategoriaRes> getById(@PathVariable("id") int id) {
+        CategoriaRes item = mapper.map(repository.buscar(id), CategoriaRes.class) ;
 
         if (item!=null) {
             return new ResponseEntity<>(item, HttpStatus.OK);
@@ -63,9 +64,9 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody Categoria item) {
+    public ResponseEntity<Void> create(@RequestBody CategoriaReq item) {
         try {
-            repository.registrar(item);
+            repository.registrar(mapper.map(item, Categoria.class) );
             return new ResponseEntity<>( HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);

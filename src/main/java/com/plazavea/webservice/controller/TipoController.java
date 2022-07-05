@@ -1,15 +1,18 @@
 package com.plazavea.webservice.controller;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
+import com.plazavea.webservice.dto.TipoReq;
+import com.plazavea.webservice.dto.TipoRes;
 import com.plazavea.webservice.model.Tipo;
 import com.plazavea.webservice.service.TipoServ;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,12 +33,17 @@ public class TipoController {
     @Autowired
     private TipoServ repository;
 
-    @GetMapping
-    public ResponseEntity<List<Tipo>> getAll() {
-        try {
-            List<Tipo> items = new ArrayList<Tipo>();
+    @Autowired
+    private ModelMapper mapper;
 
-            repository.listar().forEach(items::add);
+    @GetMapping
+    public ResponseEntity<List<TipoRes>> getAll() {
+        try {
+            List<TipoRes> items = repository.listar()
+                .stream()
+                .map(x-> 
+                    mapper.map(x, TipoRes.class))
+                .collect(Collectors.toList());
 
             if (items.isEmpty())
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -47,20 +55,19 @@ public class TipoController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Tipo> getById(@PathVariable("id") int id) {
+    public ResponseEntity<TipoRes> getById(@PathVariable("id") int id) {
         Tipo item = repository.buscar(id);
-
         if (item!=null) {
-            return new ResponseEntity<>(item, HttpStatus.OK);
+            return new ResponseEntity<>(mapper.map(item, TipoRes.class), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody Tipo item) {
+    public ResponseEntity<Void> create(@RequestBody TipoReq item) {
         try {
-            repository.registrar(item);
+            repository.registrar(mapper.map(item, Tipo.class) );
             return new ResponseEntity<>( HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);

@@ -30,8 +30,6 @@ public class UsuarioReq {
     private Empleado empleado;
     @Nullable
     private Repartidor repartidor;
-
-
     
     public UsuarioReq(String email, String psw,Set<String> roles){
         this.email = email;

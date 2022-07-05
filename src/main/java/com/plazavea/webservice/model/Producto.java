@@ -2,6 +2,7 @@ package com.plazavea.webservice.model;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -75,5 +76,22 @@ public class Producto {
 
     @OneToMany(mappedBy = "producto",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private List<Promocion> promociones;
+
+    public void saveChilds(){
+        this.descripciones = descripciones.stream().map(x->{
+            x.setProducto(this);
+            return x;
+        }).collect(Collectors.toList());
+
+        this.especificaciones = especificaciones.stream().map(x->{
+            x.setProducto(this);
+            return x;
+        }).collect(Collectors.toList());
+
+        this.promociones = promociones.stream().map(x->{
+            x.setProducto(this);
+            return x;
+        }).collect(Collectors.toList());
+    }
     
 }

@@ -1,11 +1,11 @@
 package com.plazavea.webservice.service;
 
-import java.util.List;
-
 import com.plazavea.webservice.model.Cliente;
 import com.plazavea.webservice.repository.ClienteRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,12 +14,6 @@ public class ClienteServImpl implements ClienteServ{
 
     @Autowired
     private ClienteRepository repository;
-
-    @Override
-    @Transactional
-    public void registrar(Cliente cliente) {
-        repository.save(cliente);
-    }
 
     @Override
     @Transactional
@@ -35,8 +29,8 @@ public class ClienteServImpl implements ClienteServ{
 
     @Override
     @Transactional(readOnly = true)
-    public List<Cliente> listar() {
-        return repository.findAll();
+    public Page<Cliente> listar(Pageable page) {
+        return repository.findAll(page);
     }
 
     @Override

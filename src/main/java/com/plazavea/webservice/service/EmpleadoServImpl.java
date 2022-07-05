@@ -1,6 +1,5 @@
 package com.plazavea.webservice.service;
 
-import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -8,6 +7,8 @@ import com.plazavea.webservice.model.Empleado;
 import com.plazavea.webservice.repository.EmpleadoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,12 +16,6 @@ public class EmpleadoServImpl implements EmpleadoServ{
 
     @Autowired
     private EmpleadoRepository repository;
-
-    @Override
-    @Transactional
-    public void registrar(Empleado empleado) {
-        repository.save(empleado);
-    }
 
     @Override
     @Transactional
@@ -36,9 +31,9 @@ public class EmpleadoServImpl implements EmpleadoServ{
 
     @Override
     @Transactional(readOnly = true)
-    public List<Empleado> listar() {
+    public Page<Empleado> listar(Pageable page) {
         
-        return repository.findAll();
+        return repository.findAll(page);
     }
 
     @Override
