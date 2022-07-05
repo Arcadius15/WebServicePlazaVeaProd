@@ -3,13 +3,6 @@ package com.plazavea.webservice.service;
 import java.util.List;
 
 import com.plazavea.webservice.model.Categoria;
-import com.plazavea.webservice.model.Descripcion;
-import com.plazavea.webservice.model.Especificaciones;
-import com.plazavea.webservice.model.Producto;
-import com.plazavea.webservice.model.Promocion;
-import com.plazavea.webservice.model.SubCategoria;
-import com.plazavea.webservice.model.Subtipo;
-import com.plazavea.webservice.model.Tipo;
 import com.plazavea.webservice.repository.CategoriaRepository;
 
 
@@ -26,48 +19,22 @@ public class CategoriaServImpl implements CategoriaServ{
     @Override
     @Transactional
     public void registrar(Categoria categoria) {
-        for (SubCategoria subCategoria : categoria.getSubcategorias()) {
-            subCategoria.setCategoria(categoria);
-            for (Tipo tipo : subCategoria.getTipos()) {
-                tipo.setSubcategoria(subCategoria);
-                for (Subtipo subtipo : tipo.getSubtipos()) {
-                    subtipo.setTipo(tipo);
-                    for (Producto producto : subtipo.getProductos()) {
-                        producto.setSubtipo(subtipo);
-                    }
-                }
-            }
+        if (categoria.getSubcategorias().size()>0) {
+            categoria.getSubcategorias().forEach(x->x.saveChilds());
         }
+        
         repository.save(categoria);
     }
 
     @Override
     @Transactional
     public void registrarLista(List<Categoria> categorias){
-        //seteando el id de producto es sus clases hijos
-        for (Categoria categoria : categorias) {
-            for (SubCategoria subCategoria : categoria.getSubcategorias()) {
-                subCategoria.setCategoria(categoria);
-                for (Tipo tipo : subCategoria.getTipos()) {
-                    tipo.setSubcategoria(subCategoria);
-                    for (Subtipo subtipo : tipo.getSubtipos()) {
-                        subtipo.setTipo(tipo);
-                        for (Producto producto : subtipo.getProductos()) {
-                            producto.setSubtipo(subtipo);
-                            for (Especificaciones esp : producto.getEspecificaciones()) {
-                                esp.setProducto(producto);
-                            }
-                            for (Descripcion des : producto.getDescripciones()) {
-                                des.setProducto(producto);
-                            }
-                            for (Promocion promocion : producto.getPromociones()) {
-                                promocion.setProducto(producto);
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        for (var c : categorias) { c.saveChilds();
+            for (var sc : c.getSubcategorias()) { sc.saveChilds();
+                for (var t : sc.getTipos()) { t.saveChilds();
+                    for (var st : t.getSubtipos()) { st.saveChilds();
+                        for (var p : st.getProductos()) { p.saveChilds();
+        }}}}}
 
         repository.saveAll(categorias);
     }

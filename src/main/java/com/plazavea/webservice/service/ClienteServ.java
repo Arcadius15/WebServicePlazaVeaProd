@@ -1,13 +1,13 @@
 package com.plazavea.webservice.service;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.plazavea.webservice.model.Cliente;
 
 public interface ClienteServ {
-    public void registrar(Cliente cliente);
     public void editar(Cliente cliente);
     public void eliminar(String id);
-    public List<Cliente> listar();
+    public Page<Cliente> listar(Pageable page);
     public Cliente buscar(String id);
 }

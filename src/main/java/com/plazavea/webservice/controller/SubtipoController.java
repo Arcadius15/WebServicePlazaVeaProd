@@ -1,16 +1,22 @@
 package com.plazavea.webservice.controller;
 
 
+import com.plazavea.webservice.dto.SubTipoReq;
+import com.plazavea.webservice.dto.SubtipoRes;
 import com.plazavea.webservice.model.Subtipo;
 import com.plazavea.webservice.service.SubtipoServ;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +37,19 @@ public class SubtipoController {
     @Autowired
     private SubtipoServ repository;
 
+    @Autowired
+    private ModelMapper mapper;
+
     @GetMapping
-    public ResponseEntity<Page<Subtipo>> getAll(Pageable page) {
+    public ResponseEntity<Page<SubtipoRes>> getAll(Pageable page) {
         try {
-            Page<Subtipo> items = repository.listar(page);
+            List<SubtipoRes> content = repository.listar(page)
+                .getContent()
+                .stream()
+                .map(x->
+                    mapper.map(x, SubtipoRes.class))
+                .collect(Collectors.toList());
+            Page<SubtipoRes> items = new PageImpl<>(content);
 
             if (items.isEmpty())
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -46,20 +61,19 @@ public class SubtipoController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Subtipo> getById(@PathVariable("id") int id) {
-        Subtipo item = repository.buscar(id);
-
+    public ResponseEntity<SubtipoRes> getById(@PathVariable("id") int id) {
+        Subtipo item = repository.buscar(id) ;
         if (item!=null) {
-            return new ResponseEntity<>(item, HttpStatus.OK);
+            return new ResponseEntity<>(mapper.map(item, SubtipoRes.class), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody Subtipo item) {
+    public ResponseEntity<Void> create(@RequestBody SubTipoReq item) {
         try {
-            repository.registrar(item);
+            repository.registrar(mapper.map(item, Subtipo.class) );
             return new ResponseEntity<>( HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);

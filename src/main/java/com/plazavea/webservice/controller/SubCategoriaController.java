@@ -1,9 +1,9 @@
 package com.plazavea.webservice.controller;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
@@ -39,9 +39,11 @@ public class SubCategoriaController {
     @GetMapping
     public ResponseEntity<List<SubcategoriaRes>> getAll() {
         try {
-            List<SubcategoriaRes> items = new ArrayList<SubcategoriaRes>();
-            repository.listar().forEach(x-> 
-                items.add(mapper.map(x, SubcategoriaRes.class)));
+            List<SubcategoriaRes> items = repository.listar()
+                .stream()
+                .map(x-> 
+                    mapper.map(x, SubcategoriaRes.class))
+                .collect(Collectors.toList());
 
             if (items.isEmpty())
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -54,10 +56,9 @@ public class SubCategoriaController {
 
     @GetMapping("{id}")
     public ResponseEntity<SubcategoriaRes> getById(@PathVariable("id") int id) {
-        SubcategoriaRes item = mapper.map(repository.buscar(id), SubcategoriaRes.class);
-
+        SubCategoria item = repository.buscar(id);
         if (item!=null) {
-            return new ResponseEntity<>(item, HttpStatus.OK);
+            return new ResponseEntity<>(mapper.map(item, SubcategoriaRes.class), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
