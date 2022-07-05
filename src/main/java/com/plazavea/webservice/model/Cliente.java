@@ -24,8 +24,10 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(exclude = "usuario")
 @Entity
 @Table(name = "cliente")
 public class Cliente {
