@@ -14,6 +14,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,6 +39,7 @@ public class ConfirmationToken {
     private Date createdDate;
 
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "id_usuario",referencedColumnName = "id_usuario")
     private Usuario user;
 

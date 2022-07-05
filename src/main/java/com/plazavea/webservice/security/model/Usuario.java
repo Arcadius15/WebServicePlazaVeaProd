@@ -37,10 +37,12 @@ import com.plazavea.webservice.model.Repartidor;
 import com.plazavea.webservice.utils.StringPrefixedSequenceGenerator;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
 @Table(name = "usuario")
+@EqualsAndHashCode(exclude = {"cliente","empleado","repartidor"})
 @JsonIgnoreProperties({"enabled","username","authorities","accountNonExpired","credentialsNonExpired","accountNonLocked"})
 public class Usuario implements UserDetails{
 
@@ -88,6 +90,7 @@ public class Usuario implements UserDetails{
             foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key(id_rol) references rol(id_rol)")))
     private Set<Rol> roles;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private ConfirmationToken confirmationToken;
 
