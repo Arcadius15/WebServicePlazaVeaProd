@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.plazavea.webservice.security.dto.UsuarioPsw;
 import com.plazavea.webservice.security.dto.UsuarioReq;
 import com.plazavea.webservice.security.enums.Roles;
 import com.plazavea.webservice.security.model.ConfirmationToken;
@@ -116,9 +117,19 @@ public class UserDetService implements UserDetailsService{
         } catch (Exception e) {
             return null;
         }
-        
-
         return repository.save(user);
+    }
+
+    public Usuario editPsw(UsuarioPsw userPsw){
+        Usuario usuario = repository.findByEmail(userPsw.getEmail()).get();
+        if (!encriptador().matches(userPsw.getOldPassword(), usuario.getPassword())) {
+            return null;
+        };
+        usuario.setPassword(encriptador().encode(userPsw.getNewPassword()));
+        if (!usuario.isCredentialsNonExpired()) {
+            usuario.setPswExp(LocalDate.now().plusMonths(1));
+        }
+        return repository.saveAndFlush(usuario);
     }
 
     @Bean
