@@ -7,16 +7,14 @@ import com.plazavea.webservice.model.Subtipo;
 import com.plazavea.webservice.service.SubtipoServ;
 
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 
 import javax.validation.constraints.NotNull;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,18 +41,17 @@ public class SubtipoController {
     @GetMapping
     public ResponseEntity<Page<SubtipoRes>> getAll(Pageable page) {
         try {
-            List<SubtipoRes> content = repository.listar(page)
-                .getContent()
-                .stream()
-                .map(x->
-                    mapper.map(x, SubtipoRes.class))
-                .collect(Collectors.toList());
-            Page<SubtipoRes> items = new PageImpl<>(content);
+            Page<SubtipoRes> content = repository.listar(page).map(new Function<Subtipo,SubtipoRes>() {
+                @Override
+                public SubtipoRes apply(Subtipo t) {
+                    return mapper.map(t, SubtipoRes.class);
+                }
+            });
 
-            if (items.isEmpty())
+            if (content.isEmpty())
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
-            return new ResponseEntity<>(items, HttpStatus.OK);
+            return new ResponseEntity<>(content, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

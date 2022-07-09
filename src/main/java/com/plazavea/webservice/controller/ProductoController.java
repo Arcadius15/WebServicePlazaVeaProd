@@ -4,19 +4,19 @@ package com.plazavea.webservice.controller;
 import com.plazavea.webservice.dto.ProductoReq;
 import com.plazavea.webservice.dto.ProductoRes;
 import com.plazavea.webservice.model.Producto;
+import com.plazavea.webservice.model.SubCategoria;
 import com.plazavea.webservice.service.ProductoServ;
+import com.plazavea.webservice.service.SubCategoriaServ;
 
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 
 import javax.validation.constraints.NotNull;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @RestController
 @RequestMapping("/producto")
 public class ProductoController {
@@ -38,23 +39,24 @@ public class ProductoController {
     private ProductoServ repository;
 
     @Autowired
+    private SubCategoriaServ repositorySc;
+
+    @Autowired
     private ModelMapper mapper;
 
     @GetMapping
     public ResponseEntity<Page<ProductoRes>> getAll(Pageable page) {
         try {
-            List<ProductoRes> content = repository.listar(page)
-                .getContent()
-                .stream()
-                .map(x-> 
-                    mapper.map(x, ProductoRes.class))
-                .collect(Collectors.toList());
+            Page<ProductoRes> content = repository.listar(page).map(new Function<Producto,ProductoRes>(){
+                @Override
+                public ProductoRes apply(Producto t) {
+                    return mapper.map(t, ProductoRes.class);
+                }
+            });
 
             if (content.isEmpty())
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
-            Page<ProductoRes> items = new PageImpl<>(content);
-            return new ResponseEntity<>(items, HttpStatus.OK);
+            return new ResponseEntity<>(content, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -105,4 +107,25 @@ public class ProductoController {
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
     }
+
+    @GetMapping("subcategoria/{id}")
+    public ResponseEntity<Page<ProductoRes>> getProductosBySubCat(@PathVariable int id,Pageable page) {
+        try {
+            SubCategoria sc = repositorySc.buscar(id);
+            if (sc==null) throw new Exception("No existe Sub Categoria");
+            Page<ProductoRes> content = repository.listarPorSubCat(sc,page).map(new Function<Producto,ProductoRes>(){
+                @Override
+                public ProductoRes apply(Producto t) {
+                    return mapper.map(t, ProductoRes.class);
+                }
+            });
+
+            if (content.isEmpty())
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(content, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
 }
