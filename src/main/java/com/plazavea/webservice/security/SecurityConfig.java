@@ -59,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers("/jwt/editpassword").permitAll()
 			//producto
 			.antMatchers(HttpMethod.GET,"/producto").permitAll()
-			.antMatchers(HttpMethod.GET,"/producto/{id}").permitAll()
+			.antMatchers(HttpMethod.GET,"/producto/**").permitAll()
 			.antMatchers(HttpMethod.POST,"/producto").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name())
 			.antMatchers(HttpMethod.PUT,"/producto/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name())
 			//admin

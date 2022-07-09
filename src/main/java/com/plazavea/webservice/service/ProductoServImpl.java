@@ -2,6 +2,7 @@ package com.plazavea.webservice.service;
 
 
 import com.plazavea.webservice.model.Producto;
+import com.plazavea.webservice.model.SubCategoria;
 import com.plazavea.webservice.repository.ProductoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,12 @@ public class ProductoServImpl implements ProductoServ{
     public Producto buscar(String id) {
         
         return repository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Page<Producto> listarPorSubCat(SubCategoria subCategoria, Pageable page) {
+        
+        return repository.findBySubtipo_Tipo_Subcategoria(subCategoria, page);
     }
     
 }
