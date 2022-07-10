@@ -11,7 +11,9 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -92,7 +94,11 @@ public class JwtAuthController {
     @PostMapping(value = "/registro/empleado")
 	public ResponseEntity<?> saveEmpleado(@Valid @RequestBody UsuarioReq user,BindingResult bindingResult) throws Exception {
         if(bindingResult.hasErrors())
-            return ResponseEntity.badRequest().body(new Mensaje("campos mal puestos o email inválido"));
+            return ResponseEntity.badRequest().body(
+                new Mensaje("Campos mal ingresados: "+
+                    ((FieldError) bindingResult.getAllErrors().get(0)).getField() + " -> " +
+                    bindingResult.getAllErrors().get(0).getDefaultMessage())
+                );
         if(usuarioServ.existByEmail(user.getEmail()))
             return ResponseEntity.badRequest().body(new Mensaje("email ya existe"));
         if(user.getRoles().size()>1)
@@ -115,6 +121,25 @@ public class JwtAuthController {
         }
         return ResponseEntity.badRequest().body(new Mensaje("Usuario Invalido"));
 	}
+
+    @GetMapping(value = "/getuserdetails")
+    public ResponseEntity<?> getUsuario(@Valid @RequestBody UsuarioReq user){
+        try {
+            authenticate(user.getEmail(), user.getPassword());
+            if(usuarioServ.existByEmail(user.getEmail())){
+                Usuario u = usuarioServ.getByEmail(user.getEmail()).get();
+                return ResponseEntity.ok().body(u);
+            }
+            else{
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new Mensaje("Email o Contraseña invalidos"));
+        }
+        
+    }
+
+
 
 
 

@@ -97,7 +97,7 @@ public class EmailSenderService {
             email.addRecipient(javax.mail.Message.RecipientType.TO,
                     new InternetAddress(mail.getTo()[0]));
             email.setSubject(mail.getSubject());
-            email.setText(mail.getText());
+            email.setText(mail.getText(),"ISO-8859-1");
     
             // Encode and wrap the MIME message into a gmail message
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
