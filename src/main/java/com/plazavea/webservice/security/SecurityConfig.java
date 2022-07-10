@@ -57,6 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers("/jwt/registro/empleado").hasAnyRole(Roles.MASTER.name(),Roles.ADMIN.name())
 			.antMatchers("/jwt/registro").permitAll()
 			.antMatchers("/jwt/editpassword").permitAll()
+			.antMatchers("/jwt/getuserdetails").hasAnyRole(Roles.USER.name())
 			//producto
 			.antMatchers(HttpMethod.GET,"/producto").permitAll()
 			.antMatchers(HttpMethod.GET,"/producto/**").permitAll()

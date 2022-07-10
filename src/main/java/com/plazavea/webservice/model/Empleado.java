@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -37,16 +39,20 @@ public class Empleado {
     })
     private String idEmpleado;
     @Column
+    @NotBlank(message = "Nombre no puede ir Vacio")
     private String nombres;
     @Column
+    @NotBlank(message = "Apellido no puede ir Vacio")
     private String apellidos;
     @Column(nullable = false,length = 8)
+    @Pattern(regexp="(^$|[0-8]{8})",message = "DNI invalido")
     private String dni;
     @Column
+    @Past(message = "Fecha Invalida")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaNacimiento;
     @Column
-    @Pattern(regexp="(^$|[0-9]{9})")
+    @Pattern(regexp="(^$|[0-9]{9})",message = "Numero Telefonico Invalido")
     private String numTelefonico;
 
     @OneToOne

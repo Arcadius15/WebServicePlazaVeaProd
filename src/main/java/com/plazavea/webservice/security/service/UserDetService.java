@@ -13,9 +13,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.plazavea.webservice.security.dto.UsuarioPsw;
 import com.plazavea.webservice.security.dto.UsuarioReq;
+import com.plazavea.webservice.security.enums.Domains;
 import com.plazavea.webservice.security.enums.Roles;
 import com.plazavea.webservice.security.model.ConfirmationToken;
 import com.plazavea.webservice.security.model.Rol;
@@ -51,7 +53,8 @@ public class UserDetService implements UserDetailsService{
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("Username: %s not found in database", email)));
     }
 
-    public Usuario save(UsuarioReq userReq){
+    @Transactional
+    public Usuario save(UsuarioReq userReq)throws Exception{
         Usuario user = new Usuario();
         user.setEmail(userReq.getEmail());
         user.setPassword(encriptador().encode(userReq.getPassword()));
@@ -112,22 +115,44 @@ public class UserDetService implements UserDetailsService{
             mailMessage.setFrom("diegovic996@gmail.com");
             mailMessage.setText("To confirm your account, please click here : "
             +"https://plazavea-webservice.herokuapp.com/confirm-account?token="+confirmationToken.getConfirmationToken());
+        
         try {
-            emailSenderService.getMessage(mailMessage);
+            var sendedMail = false;
+            for (Domains domains : Domains.values()) {
+                if (user.getEmail().contains("@"+domains.name().toLowerCase()+".com")) {
+                    emailSenderService.getMessage(mailMessage);
+                    sendedMail = true;
+                    break;
+                }
+            }
+            if (!sendedMail) {
+                throw new Exception("Error en Dominio");
+            }
         } catch (Exception e) {
             return null;
         }
         return repository.save(user);
     }
 
+    @Transactional
     public Usuario editPsw(UsuarioPsw userPsw){
         Usuario usuario = repository.findByEmail(userPsw.getEmail()).get();
         if (!encriptador().matches(userPsw.getOldPassword(), usuario.getPassword())) {
             return null;
         };
         usuario.setPassword(encriptador().encode(userPsw.getNewPassword()));
-        if (!usuario.isCredentialsNonExpired()) {
-            usuario.setPswExp(LocalDate.now().plusMonths(1));
+        usuario.setPswExp(LocalDate.now().plusMonths(1));
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setTo(userPsw.getEmail());
+            mailMessage.setSubject("Contraseña Cambiada Exitosamente!");
+            mailMessage.setFrom("diegovic996@gmail.com");
+            mailMessage.setText("Su Contraseña fue cambiada exitosamente, su fecha de expiracion fue cambiada a "
+            +usuario.getPswExp().toString());
+        
+        try {
+            emailSenderService.getMessage(mailMessage);
+        } catch (Exception e) {
+            return null;
         }
         return repository.saveAndFlush(usuario);
     }

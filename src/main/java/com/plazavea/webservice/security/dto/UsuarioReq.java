@@ -2,6 +2,7 @@ package com.plazavea.webservice.security.dto;
 
 import java.util.Set;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
@@ -24,10 +25,16 @@ public class UsuarioReq {
     @NotEmpty
     private String password;
     private Set<String> roles;
+    
+    @Valid
     @Nullable
     private Cliente cliente;
+    
+    @Valid
     @Nullable
     private Empleado empleado;
+    
+    @Valid
     @Nullable
     private Repartidor repartidor;
     
