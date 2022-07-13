@@ -13,6 +13,4 @@ public class AppConf implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:3000")
                 .allowedMethods("GET","POST","PUT","PATCH");
     }
-
-    
 }

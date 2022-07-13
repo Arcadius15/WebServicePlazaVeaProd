@@ -20,7 +20,7 @@ public class Direccion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idDireccion;
     @Column
-    private int direccion;
+    private String direccion;
     @Column
     private Long latitud;
     @Column

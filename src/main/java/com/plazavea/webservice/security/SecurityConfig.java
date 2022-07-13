@@ -145,11 +145,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.and()
 			.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
 			.csrf().disable();
+
+			http.cors();
     }
 
     @Bean
 	public PasswordEncoder encriptado() {
 		return new BCryptPasswordEncoder();
 	}
+
+	
 
 }
