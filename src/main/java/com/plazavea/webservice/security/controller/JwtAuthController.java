@@ -2,6 +2,7 @@ package com.plazavea.webservice.security.controller;
 
 import javax.validation.Valid;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.plazavea.webservice.security.dto.TokenRes;
 import com.plazavea.webservice.security.dto.UsuarioPsw;
 import com.plazavea.webservice.security.dto.UsuarioReq;
+import com.plazavea.webservice.security.dto.UsuarioRes;
 import com.plazavea.webservice.security.model.Usuario;
 import com.plazavea.webservice.dto.Mensaje;
 import com.plazavea.webservice.security.dto.JwtReq;
@@ -45,6 +47,9 @@ public class JwtAuthController {
 
     @Autowired
     private UsuarioServ usuarioServ;
+
+    @Autowired
+    private ModelMapper mapper;
     
     
 	@PostMapping(value = "/authenticate")
@@ -67,7 +72,8 @@ public class JwtAuthController {
             return ResponseEntity.badRequest().body(new Mensaje("email ya existe"));
         for (String rol : user.getRoles()) {
             if (rol.toLowerCase().equals("cliente")) {
-                Usuario userSave = service.save(user);
+                Usuario u = service.save(user);
+                UsuarioRes userSave = mapper.map( u, UsuarioRes.class);
                 if (userSave!=null) {
                     return ResponseEntity.ok(userSave); 
                 }
@@ -115,8 +121,9 @@ public class JwtAuthController {
                 break;
             }
         }
+        UsuarioRes userRes = mapper.map(userSave, UsuarioRes.class);
         if (userSave!=null) {
-            return ResponseEntity.ok(userSave); 
+            return ResponseEntity.ok(userRes); 
         }
         return ResponseEntity.badRequest().body(new Mensaje("Usuario Invalido"));
 	}
@@ -126,7 +133,7 @@ public class JwtAuthController {
         try {
             authenticate(user.getEmail(), user.getPassword());
             if(usuarioServ.existByEmail(user.getEmail())){
-                Usuario u = usuarioServ.getByEmail(user.getEmail()).get();
+                UsuarioRes u = mapper.map(usuarioServ.getByEmail(user.getEmail()).get(), UsuarioRes.class) ;
                 return ResponseEntity.ok().body(u);
             }
             else{
