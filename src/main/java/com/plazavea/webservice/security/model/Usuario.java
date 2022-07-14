@@ -29,8 +29,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.plazavea.webservice.model.Empleado;
 import com.plazavea.webservice.model.Cliente;
 import com.plazavea.webservice.model.Repartidor;
@@ -58,7 +56,6 @@ public class Usuario implements UserDetails{
     @Column
     private String email;
     @Column
-    @JsonIgnore
     private String password;
     @Column
     private boolean activo;
@@ -68,18 +65,12 @@ public class Usuario implements UserDetails{
     private boolean blocked;
 
     @OneToOne(mappedBy = "usuario",fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
-    @JsonInclude(Include.NON_NULL)
-    @JsonIgnoreProperties({"usuario"})
     private Cliente cliente;
 
     @OneToOne(mappedBy = "usuario",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
-    @JsonInclude(Include.NON_NULL)
-    @JsonIgnoreProperties({"usuario"})
     private Repartidor repartidor;
 
     @OneToOne(mappedBy = "usuario",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
-    @JsonInclude(Include.NON_NULL)
-    @JsonIgnoreProperties({"usuario"})
     private Empleado empleado;
 
     @ManyToMany(fetch = FetchType.EAGER)

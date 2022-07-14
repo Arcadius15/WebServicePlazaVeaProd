@@ -25,9 +25,13 @@ import com.plazavea.webservice.security.model.Usuario;
 import com.plazavea.webservice.security.repository.UsuarioRepository;
 import com.plazavea.webservice.security.utils.AccountStatusUserDetailsChecker;
 
+import lombok.extern.slf4j.Slf4j;
+
 import static java.util.Optional.ofNullable;
 
+import java.io.File;
 
+@Slf4j
 @Service
 public class UserDetService implements UserDetailsService{
 
@@ -115,9 +119,9 @@ public class UserDetService implements UserDetailsService{
             mailMessage.setFrom("diegovic996@gmail.com");
             mailMessage.setText("To confirm your account, please click here : "
             +"https://plazavea-webservice.herokuapp.com/confirm-account?token="+confirmationToken.getConfirmationToken());
-        
+        var sendedMail = false;
         try {
-            var sendedMail = false;
+            
             for (Domains domains : Domains.values()) {
                 if (user.getEmail().contains("@"+domains.name().toLowerCase()+".com")) {
                     emailSenderService.getMessage(mailMessage);
@@ -129,9 +133,14 @@ public class UserDetService implements UserDetailsService{
                 throw new Exception("Error en Dominio");
             }
         } catch (Exception e) {
+            File carpeta = new File("tokens/StoredCredential");
+            if (carpeta.exists()) {
+                var del =carpeta.delete();
+                log.error(del?"Archivo TOKEN Borrado":"Error");
+            }
             return null;
         }
-        return repository.save(user);
+        if(sendedMail) return repository.save(user); else return null;
     }
 
     @Transactional

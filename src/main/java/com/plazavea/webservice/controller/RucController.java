@@ -7,9 +7,11 @@ import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
+import com.plazavea.webservice.dto.RucRes;
 import com.plazavea.webservice.model.Ruc;
 import com.plazavea.webservice.service.RucServ;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,12 +32,16 @@ public class RucController {
     @Autowired
     private RucServ repository;
 
-    @GetMapping
-    public ResponseEntity<List<Ruc>> getAll() {
-        try {
-            List<Ruc> items = new ArrayList<Ruc>();
+    @Autowired
+    private ModelMapper mapper;
 
-            repository.listar().forEach(items::add);
+    @GetMapping
+    public ResponseEntity<List<RucRes>> getAll() {
+        try {
+            List<RucRes> items = new ArrayList<RucRes>();
+
+            repository.listar().forEach(x->
+                items.add(mapper.map(x, RucRes.class)));
 
             if (items.isEmpty())
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -47,8 +53,8 @@ public class RucController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Ruc> getById(@PathVariable("id") int id) {
-        Ruc item = repository.buscar(id);
+    public ResponseEntity<RucRes> getById(@PathVariable("id") int id) {
+        RucRes item = mapper.map(repository.buscar(id), RucRes.class);
 
         if (item!=null) {
             return new ResponseEntity<>(item, HttpStatus.OK);
