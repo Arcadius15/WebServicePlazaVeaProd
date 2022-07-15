@@ -6,14 +6,11 @@ import lombok.Data;
 
 @Data
 public class ProductoRes {
+    private String idProducto;
     private String nombre;
-    
     private String imagenUrl;
-    
     private Double precioRegular;
-    
     private Double precioOferta;
-    
     private boolean oferta;
 
     private List<PromocionReq> promociones;
