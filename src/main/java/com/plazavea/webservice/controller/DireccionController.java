@@ -1,15 +1,17 @@
 package com.plazavea.webservice.controller;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
-import com.plazavea.webservice.dto.RucRes;
-import com.plazavea.webservice.model.Ruc;
-import com.plazavea.webservice.service.RucServ;
+import com.plazavea.webservice.dto.DireccionReq;
+import com.plazavea.webservice.dto.DireccionRes;
+import com.plazavea.webservice.model.Direccion;
+import com.plazavea.webservice.service.DireccionServ;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,22 +28,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/ruc")
-public class RucController {
+@RequestMapping("/direccion")
+public class DireccionController {
 
     @Autowired
-    private RucServ repository;
+    private DireccionServ repository;
 
     @Autowired
     private ModelMapper mapper;
 
     @GetMapping("/listar/{id}")
-    public ResponseEntity<List<RucRes>> getAll(@PathVariable String id) {
+    public ResponseEntity<List<DireccionRes>> getAll(@PathVariable String id) {
         try {
-            List<RucRes> items = new ArrayList<RucRes>();
-
-            repository.listar(id).forEach(x->
-                items.add(mapper.map(x, RucRes.class)));
+            List<DireccionRes> items = repository.listar(id).stream().map(new Function<Direccion,DireccionRes>(){
+                @Override
+                public DireccionRes apply(Direccion t) {
+                    return mapper.map(t, DireccionRes.class);
+                }
+            }).collect(Collectors.toList());
 
             if (items.isEmpty())
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -53,8 +57,8 @@ public class RucController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<RucRes> getById(@PathVariable("id") int id) {
-        RucRes item = mapper.map(repository.buscar(id), RucRes.class);
+    public ResponseEntity<DireccionRes> getById(@PathVariable("id") int id) {
+        DireccionRes item = mapper.map(repository.buscar(id), DireccionRes.class) ;
 
         if (item!=null) {
             return new ResponseEntity<>(item, HttpStatus.OK);
@@ -64,9 +68,9 @@ public class RucController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody Ruc item) {
+    public ResponseEntity<Void> create(@RequestBody DireccionReq item) {
         try {
-            repository.registrar(item);
+            repository.guardar(mapper.map(item, Direccion.class));
             return new ResponseEntity<>( HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
@@ -75,10 +79,10 @@ public class RucController {
 
     @PatchMapping("{id}")
     public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody Map<@NotNull Object,@NotNull Object> item) {
-        Ruc existingItem = repository.buscar(id);
+        Direccion existingItem = repository.buscar(id);
         if (existingItem!=null) {
         	item.forEach((key,value)->{
-        		Field field = ReflectionUtils.findField(Ruc.class, (String) key);
+        		Field field = ReflectionUtils.findField(Direccion.class, (String) key);
                 field.setAccessible(true);
 				ReflectionUtils.setField(field, existingItem, value);
         	});
