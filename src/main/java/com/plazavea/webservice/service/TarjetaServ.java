@@ -8,7 +8,7 @@ public interface TarjetaServ {
     public void registrar(Tarjeta tarjeta);
     public void editar(Tarjeta tarjeta);
     public void eliminar(int id);
-    public List<Tarjeta> listar();
+    public List<Tarjeta> listar(String idCliente);
     public Tarjeta buscar(int id);
     
 }
