@@ -38,9 +38,8 @@ public class TarjetaServImpl implements TarjetaServ{
 
     @Override
     @Transactional(readOnly = true)
-    public List<Tarjeta> listar() {
-        
-        return repository.findAll();
+    public List<Tarjeta> listar(String idCliente) {
+        return repository.findByCliente_IdCliente(idCliente).orElse(null);
     }
 
     @Override

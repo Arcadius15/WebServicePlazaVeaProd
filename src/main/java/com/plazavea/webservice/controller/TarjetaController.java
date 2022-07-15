@@ -1,15 +1,19 @@
 package com.plazavea.webservice.controller;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
+import com.plazavea.webservice.dto.TarjetaReq;
+import com.plazavea.webservice.dto.TarjetaRes;
 import com.plazavea.webservice.model.Tarjeta;
 import com.plazavea.webservice.service.TarjetaServ;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,12 +34,18 @@ public class TarjetaController {
     @Autowired
     private TarjetaServ repository;
 
-    @GetMapping
-    public ResponseEntity<List<Tarjeta>> getAll() {
-        try {
-            List<Tarjeta> items = new ArrayList<Tarjeta>();
+    @Autowired
+    private ModelMapper mapper;
 
-            repository.listar().forEach(items::add);
+    @GetMapping("{idcli}")
+    public ResponseEntity<List<TarjetaRes>> getAll(String idcli) {
+        try {
+            List<TarjetaRes> items = repository.listar(idcli).stream().map(new Function<Tarjeta,TarjetaRes>(){
+                @Override
+                public TarjetaRes apply(Tarjeta t) {
+                    return mapper.map(t, TarjetaRes.class);
+                }
+            }).collect(Collectors.toList());
 
             if (items.isEmpty())
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -47,8 +57,8 @@ public class TarjetaController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Tarjeta> getById(@PathVariable("id") int id) {
-        Tarjeta item = repository.buscar(id);
+    public ResponseEntity<TarjetaRes> getById(@PathVariable("id") int id) {
+        TarjetaRes item = mapper.map(repository.buscar(id), TarjetaRes.class) ;
 
         if (item!=null) {
             return new ResponseEntity<>(item, HttpStatus.OK);
@@ -58,9 +68,9 @@ public class TarjetaController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody Tarjeta item) {
+    public ResponseEntity<Void> create(@RequestBody TarjetaReq item) {
         try {
-            repository.registrar(item);
+            repository.registrar(mapper.map(item, Tarjeta.class));
             return new ResponseEntity<>( HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
