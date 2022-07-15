@@ -37,10 +37,10 @@ public class TarjetaController {
     @Autowired
     private ModelMapper mapper;
 
-    @GetMapping("{idcli}")
-    public ResponseEntity<List<TarjetaRes>> getAll(String idcli) {
+    @GetMapping("/listar/{id}")
+    public ResponseEntity<List<TarjetaRes>> getAll(@PathVariable String id) {
         try {
-            List<TarjetaRes> items = repository.listar(idcli).stream().map(new Function<Tarjeta,TarjetaRes>(){
+            List<TarjetaRes> items = repository.listar(id).stream().map(new Function<Tarjeta,TarjetaRes>(){
                 @Override
                 public TarjetaRes apply(Tarjeta t) {
                     return mapper.map(t, TarjetaRes.class);

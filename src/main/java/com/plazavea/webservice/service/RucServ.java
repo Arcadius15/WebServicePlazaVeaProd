@@ -8,6 +8,6 @@ public interface RucServ {
     public void registrar(Ruc ruc);
     public void editar(Ruc ruc);
     public void eliminar(int id);
-    public List<Ruc> listar();
+    public List<Ruc> listar(String id);
     public Ruc buscar(int id);
 }
