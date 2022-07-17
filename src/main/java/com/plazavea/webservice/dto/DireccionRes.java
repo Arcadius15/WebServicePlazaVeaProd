@@ -6,6 +6,6 @@ import lombok.Data;
 public class DireccionRes {
     private int idDireccion;
     private String direccion;
-    private Long latitud;
-    private Long longitud;
+    private Double latitud;
+    private Double longitud;
 }

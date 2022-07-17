@@ -22,9 +22,9 @@ public class Direccion {
     @Column
     private String direccion;
     @Column
-    private Long latitud;
+    private Double latitud;
     @Column
-    private Long longitud;
+    private Double longitud;
     @ManyToOne
     @JoinColumn(name = "id_cliente",nullable = false,
         foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key(id_cliente) references cliente(id_cliente)"))
