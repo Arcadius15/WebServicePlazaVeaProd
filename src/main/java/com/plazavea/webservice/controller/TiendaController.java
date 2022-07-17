@@ -1,15 +1,19 @@
 package com.plazavea.webservice.controller;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
+import com.plazavea.webservice.dto.TiendaReq;
+import com.plazavea.webservice.dto.TiendaRes;
 import com.plazavea.webservice.model.Tienda;
 import com.plazavea.webservice.service.TiendaServ;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,12 +34,18 @@ public class TiendaController {
     @Autowired
     private TiendaServ repository;
 
-    @GetMapping
-    public ResponseEntity<List<Tienda>> getAll() {
-        try {
-            List<Tienda> items = new ArrayList<Tienda>();
+    @Autowired
+    private ModelMapper mapper;
 
-            repository.listar().forEach(items::add);
+    @GetMapping
+    public ResponseEntity<List<TiendaRes>> getAll() {
+        try {
+            List<TiendaRes> items = repository.listar().stream().map(new Function<Tienda,TiendaRes>() {
+                @Override
+                public TiendaRes apply(Tienda t) {
+                    return mapper.map(t, TiendaRes.class);
+                }
+            }).collect(Collectors.toList());
 
             if (items.isEmpty())
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -47,8 +57,8 @@ public class TiendaController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Tienda> getById(@PathVariable("id") String id) {
-        Tienda item = repository.buscar(id);
+    public ResponseEntity<TiendaRes> getById(@PathVariable("id") String id) {
+        TiendaRes item = mapper.map(repository.buscar(id), TiendaRes.class) ;
 
         if (item!=null) {
             return new ResponseEntity<>(item, HttpStatus.OK);
@@ -57,10 +67,11 @@ public class TiendaController {
         }
     }
 
+    
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody Tienda item) {
+    public ResponseEntity<Void> create(@RequestBody TiendaReq item) {
         try {
-            repository.registrar(item);
+            repository.registrar(mapper.map(item, Tienda.class) );
             return new ResponseEntity<>( HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);

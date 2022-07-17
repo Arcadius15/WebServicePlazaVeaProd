@@ -7,21 +7,17 @@ import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class DireccionReq {
-    @NotNull
+public class RucReq {
     @NotEmpty
-    private String direccion;
     @NotNull
-    private Double latitud;
-    @NotNull
-    private Double longitud;
+    private String numeroRuc;
     @Valid
-    private ClienteDReq cliente; 
-    
+    private ClienteRucReq cliente;
 }
 
-class ClienteDReq{
-    @NotNull
+@Data
+class ClienteRucReq{
     @NotEmpty
+    @NotNull
     private String idCliente;
 }

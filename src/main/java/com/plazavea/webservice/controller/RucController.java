@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.validation.constraints.NotNull;
 
+import com.plazavea.webservice.dto.RucReq;
 import com.plazavea.webservice.dto.RucRes;
 import com.plazavea.webservice.model.Ruc;
 import com.plazavea.webservice.service.RucServ;
@@ -64,9 +65,9 @@ public class RucController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody Ruc item) {
+    public ResponseEntity<Void> create(@RequestBody RucReq item) {
         try {
-            repository.registrar(item);
+            repository.registrar(mapper.map(item, Ruc.class) );
             return new ResponseEntity<>( HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);

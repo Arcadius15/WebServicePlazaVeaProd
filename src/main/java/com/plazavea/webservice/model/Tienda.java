@@ -43,9 +43,9 @@ public class Tienda {
     @Column
     private String direccion;
     @Column
-    private Long lat;
+    private Double lat;
     @Column
-    private Long lng;
+    private Double lng;
     @Column
     private String numeroTelefonico;
     @Column
