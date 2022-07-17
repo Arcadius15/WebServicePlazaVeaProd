@@ -44,6 +44,7 @@ public class CrearRoles implements CommandLineRunner{
             UsuarioReq master = new UsuarioReq("diegovic99@hotmail.com", "123456", rol);
             serviceUserDet.save(master);
         }
+        log.info(System.getenv("SPRING_PROFILES_ACTIVE"));
     }
 
 
