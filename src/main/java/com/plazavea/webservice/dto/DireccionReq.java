@@ -20,6 +20,7 @@ public class DireccionReq {
     
 }
 
+@Data
 class ClienteDReq{
     @NotNull
     @NotEmpty
