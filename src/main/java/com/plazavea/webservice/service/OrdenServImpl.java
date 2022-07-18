@@ -30,7 +30,7 @@ public class OrdenServImpl implements OrdenServ{
 
     @Override
     @Transactional
-    public void registrar(Orden orden) {
+    public String registrar(Orden orden) {
         Set<OrdenDetalle> od = new HashSet<OrdenDetalle>();
 
         orden.getOrdendetalle().forEach(x->{
@@ -55,8 +55,8 @@ public class OrdenServImpl implements OrdenServ{
         ho.add(h);
         orden.setHistorial(ho);
         orden.setOrdendetalle(od);
-        repository.save(orden);
-        
+        Orden ordenResponse =  repository.save(orden);
+        return ordenResponse.getIdOrden();
     }
 
     @Override
