@@ -68,11 +68,11 @@ public class OrdenController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody OrdenReq item) {
+    public ResponseEntity<?> create(@RequestBody OrdenReq item) {
         try {
             Orden orden = mapper.map(item, Orden.class);
-            repository.registrar(orden);
-            return new ResponseEntity<>( HttpStatus.CREATED);
+            var res = repository.registrar(orden);
+            return new ResponseEntity<>(res, HttpStatus.CREATED);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
