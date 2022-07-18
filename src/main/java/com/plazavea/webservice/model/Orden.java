@@ -72,7 +72,7 @@ public class Orden {
     private Tienda tienda;
 
     @ManyToOne
-    @JoinColumn(name = "id_repartidor",nullable = false,
+    @JoinColumn(name = "id_repartidor",nullable = true,
         foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_repartidor) references repartidor(id_repartidor)"))
     private Repartidor repartidor;
 
