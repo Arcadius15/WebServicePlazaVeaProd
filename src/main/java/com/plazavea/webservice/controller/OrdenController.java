@@ -1,16 +1,20 @@
 package com.plazavea.webservice.controller;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import javax.validation.constraints.NotNull;
 
+import com.plazavea.webservice.dto.OrdenReq;
+import com.plazavea.webservice.dto.OrdenRes;
 import com.plazavea.webservice.model.Orden;
 import com.plazavea.webservice.service.OrdenServ;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ReflectionUtils;
@@ -30,12 +34,18 @@ public class OrdenController {
     @Autowired
     private OrdenServ repository;
 
-    @GetMapping
-    public ResponseEntity<List<Orden>> getAll() {
-        try {
-            List<Orden> items = new ArrayList<Orden>();
+    @Autowired
+    private ModelMapper mapper;
 
-            repository.listar().forEach(items::add);
+    @GetMapping("/listar/{idCliente}")
+    public ResponseEntity<Page<OrdenRes>> getAll(@PathVariable String idCliente, Pageable page) {
+        try {
+            Page<OrdenRes> items = repository.listar(idCliente,page).map(new Function<Orden,OrdenRes>() {
+                @Override
+                public OrdenRes apply(Orden t) {
+                    return mapper.map(t, OrdenRes.class);
+                }
+            });
 
             if (items.isEmpty())
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -47,8 +57,8 @@ public class OrdenController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Orden> getById(@PathVariable("id") String id) {
-        Orden item = repository.buscar(id);
+    public ResponseEntity<OrdenRes> getById(@PathVariable("id") String id) {
+        OrdenRes item = mapper.map(repository.buscar(id), OrdenRes.class) ;
 
         if (item!=null) {
             return new ResponseEntity<>(item, HttpStatus.OK);
@@ -58,11 +68,13 @@ public class OrdenController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody Orden item) {
+    public ResponseEntity<Void> create(@RequestBody OrdenReq item) {
         try {
-            repository.registrar(item);
+            Orden orden = mapper.map(item, Orden.class);
+            repository.registrar(orden);
             return new ResponseEntity<>( HttpStatus.CREATED);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
         }
     }

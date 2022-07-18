@@ -1,6 +1,7 @@
 package com.plazavea.webservice.model;
 
-import java.time.LocalDate;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -18,7 +19,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.plazavea.webservice.enums.OrdenStatus;
 import com.plazavea.webservice.utils.StringPrefixedSequenceGenerator;
 
@@ -26,8 +26,10 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(exclude = {"cliente","tienda","repartidor"})
 @Entity
 @Table(name = "orden")
 public class Orden {
@@ -47,11 +49,9 @@ public class Orden {
     @Column
     private Double total;
     @Column
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDate fecha;
+    private LocalDateTime fecha;
     @Column
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDate fechaEntrega;
+    private LocalDateTime fechaEntrega;
     @Column
     private String direccion;
     @Column
@@ -76,7 +76,7 @@ public class Orden {
         foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_repartidor) references repartidor(id_repartidor)"))
     private Repartidor repartidor;
 
-    @OneToMany(mappedBy = "orden",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "orden",cascade = CascadeType.PERSIST)
     private Set<OrdenDetalle> ordendetalle;
 
     @OneToMany(mappedBy = "orden",cascade = CascadeType.ALL)

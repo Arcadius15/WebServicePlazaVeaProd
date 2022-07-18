@@ -1,7 +1,7 @@
 package com.plazavea.webservice.model;
 
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,7 +29,7 @@ public class HistorialOrden {
     private String descripcion;
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDate fechaEstado;
+    private LocalDateTime fechaEstado;
 
     @ManyToOne
     @JoinColumn(name = "id_orden",nullable = false,
