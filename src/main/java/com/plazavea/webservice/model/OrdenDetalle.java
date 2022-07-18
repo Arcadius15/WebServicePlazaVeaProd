@@ -1,6 +1,5 @@
 package com.plazavea.webservice.model;
 
-
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -9,8 +8,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(exclude = {"orden","producto"})
 @Entity
 public class OrdenDetalle {
 

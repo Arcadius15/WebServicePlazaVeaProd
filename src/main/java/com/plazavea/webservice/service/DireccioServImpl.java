@@ -40,14 +40,12 @@ public class DireccioServImpl implements DireccionServ{
     @Override
     @Transactional(readOnly = true)
     public List<Direccion> listar(String id) {
-        // TODO Auto-generated method stub
         return repository.findByCliente_IdCliente(id).orElse(null);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Direccion buscar(int id) {
-        // TODO Auto-generated method stub
         return repository.findById(id).orElse(null);
     }
 

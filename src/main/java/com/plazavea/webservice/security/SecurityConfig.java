@@ -81,6 +81,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers(HttpMethod.POST,"/historial").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
 			.antMatchers(HttpMethod.PUT,"/historial/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name(),Roles.DELIVERY.name())
 			//orden
+			.antMatchers(HttpMethod.GET,"/orden/listar/{idCliente}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
 			.antMatchers(HttpMethod.GET,"/orden/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
 			.antMatchers(HttpMethod.POST,"/orden").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
 			.antMatchers(HttpMethod.PUT,"/orden/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
