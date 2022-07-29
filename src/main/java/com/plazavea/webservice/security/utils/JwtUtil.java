@@ -6,9 +6,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
+import com.plazavea.webservice.security.dto.UsuarioRes;
+import com.plazavea.webservice.security.model.Usuario;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -22,6 +27,9 @@ public class JwtUtil implements Serializable{
 
 	@Value("${jwt.secret}")
 	private String secret;
+
+	@Autowired
+	private ModelMapper mapper;
 
 	// Recupera el usuario que se envia en el JWT
 	public String getUsernameFromToken(String token) {
@@ -50,8 +58,19 @@ public class JwtUtil implements Serializable{
 	}
 
 	// Genera un token para el usuario
-	public String generateToken(UserDetails userDetails) {
+	public String generateToken(Usuario userDetails) {
 		Map<String, Object> claims = new HashMap<>();
+		claims.put("roles", userDetails.getAuthorities());
+		var userRes = mapper.map(userDetails, UsuarioRes.class);
+		if (userDetails.getCliente()!=null) {
+			claims.put("info", userRes.getCliente());
+		}else if(userDetails.getEmpleado()!=null){
+			claims.put("info", userRes.getEmpleado());
+		}else if(userDetails.getRepartidor()!=null){
+			claims.put("info", userRes.getRepartidor());
+		}
+		claims.put("enabled", userDetails.isEnabled());
+		claims.put("expired", !userDetails.isCredentialsNonExpired());
 		return doGenerateToken(claims, userDetails.getUsername());
 	}
 

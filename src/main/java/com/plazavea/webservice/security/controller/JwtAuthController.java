@@ -10,7 +10,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -57,7 +56,7 @@ public class JwtAuthController {
 
         authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 		
-        final UserDetails userDetails = service.loadUserByUsername(authenticationRequest.getEmail());
+        final Usuario userDetails = service.loadUserByUsername(authenticationRequest.getEmail());
 		
 		final String token = jwtUtil.generateToken(userDetails);
 
