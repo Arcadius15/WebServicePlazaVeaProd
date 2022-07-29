@@ -8,6 +8,7 @@ import lombok.Data;
 
 @Data
 public class TarjetaRes {
+    private int idTarjeta;
     private int tipo;
     private String numeroTarjeta;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

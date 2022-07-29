@@ -6,8 +6,13 @@ import java.util.Set;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.plazavea.webservice.enums.RepartidorStatus;
 import com.plazavea.webservice.security.enums.Roles;
 
@@ -44,6 +49,9 @@ class ClienteURes{
     private String nombre;
     private String apellidos;
     private String dni;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate fechaNacimiento;
     private String numTelefonico;
 }
@@ -57,6 +65,9 @@ class EmpleadoURes{
     private String nombres;
     private String apellidos;
     private String dni;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate fechaNacimiento;
     private String numTelefonico;
 }
@@ -71,9 +82,11 @@ class RepartidorURes{
     private String apellidos;
     private String dni;
     private String direccion;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate fechaNacimiento;
     private String numTelefonico;
-    private byte[] foto;
     private String placa;
     private int turno;
     @Enumerated(EnumType.STRING)
