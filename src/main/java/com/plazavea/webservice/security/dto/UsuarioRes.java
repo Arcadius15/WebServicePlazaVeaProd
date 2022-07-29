@@ -49,6 +49,8 @@ class ClienteURes{
     private String nombre;
     private String apellidos;
     private String dni;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate fechaNacimiento;
     private String numTelefonico;
