@@ -1,6 +1,5 @@
 package com.plazavea.webservice.controller;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.plazavea.webservice.model.Pedido;
 import com.plazavea.webservice.service.PedidoServ;
+import com.plazavea.webservice.utils.PatchClass;
 
 
 
@@ -30,6 +29,9 @@ import com.plazavea.webservice.service.PedidoServ;
 public class PedidoController {
     @Autowired
     private PedidoServ repository;
+
+    @Autowired
+    private PatchClass patchClass;
 
     @GetMapping
     public ResponseEntity<List<Pedido>> getAll() {
@@ -72,11 +74,8 @@ public class PedidoController {
     public ResponseEntity<Void> update(@PathVariable("id") String id, @RequestBody Map<@NotNull Object,@NotNull Object> item) {
         Pedido existingItem = repository.buscar(id);
         if (existingItem!=null) {
-        	item.forEach((key,value)->{
-        		Field field = ReflectionUtils.findField(Pedido.class, (String) key);
-                field.setAccessible(true);
-				ReflectionUtils.setField(field, existingItem, value);
-        	});
+            Pedido modifiedItem = (Pedido) patchClass.patch(Pedido.class, item, existingItem);
+            if (modifiedItem==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             repository.editar(existingItem);
             return new ResponseEntity<>(null, HttpStatus.OK);
         } else {

@@ -1,6 +1,5 @@
 package com.plazavea.webservice.controller;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,12 +10,12 @@ import com.plazavea.webservice.dto.RucReq;
 import com.plazavea.webservice.dto.RucRes;
 import com.plazavea.webservice.model.Ruc;
 import com.plazavea.webservice.service.RucServ;
+import com.plazavea.webservice.utils.PatchClass;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -35,6 +34,9 @@ public class RucController {
 
     @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    private PatchClass patchClass;
 
     @GetMapping("/listar/{id}")
     public ResponseEntity<List<RucRes>> getAll(@PathVariable String id) {
@@ -78,11 +80,8 @@ public class RucController {
     public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody Map<@NotNull Object,@NotNull Object> item) {
         Ruc existingItem = repository.buscar(id);
         if (existingItem!=null) {
-        	item.forEach((key,value)->{
-        		Field field = ReflectionUtils.findField(Ruc.class, (String) key);
-                field.setAccessible(true);
-				ReflectionUtils.setField(field, existingItem, value);
-        	});
+        	Ruc modifiedItem = (Ruc) patchClass.patch(Ruc.class, item, existingItem);
+            if (modifiedItem==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             repository.editar(existingItem);
             return new ResponseEntity<>(null, HttpStatus.OK);
         } else {

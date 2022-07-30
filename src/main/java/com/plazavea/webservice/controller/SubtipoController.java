@@ -5,8 +5,8 @@ import com.plazavea.webservice.dto.SubTipoReq;
 import com.plazavea.webservice.dto.SubtipoRes;
 import com.plazavea.webservice.model.Subtipo;
 import com.plazavea.webservice.service.SubtipoServ;
+import com.plazavea.webservice.utils.PatchClass;
 
-import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -18,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -37,6 +36,9 @@ public class SubtipoController {
 
     @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    private PatchClass patchClass;
 
     @GetMapping
     public ResponseEntity<Page<SubtipoRes>> getAll(Pageable page) {
@@ -81,11 +83,8 @@ public class SubtipoController {
     public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody Map<@NotNull Object,@NotNull Object> item) {
         Subtipo existingItem = repository.buscar(id);
         if (existingItem!=null) {
-        	item.forEach((key,value)->{
-        		Field field = ReflectionUtils.findField(Subtipo.class, (String) key);
-                field.setAccessible(true);
-				ReflectionUtils.setField(field, existingItem, value);
-        	});
+        	Subtipo modifiedItem = (Subtipo) patchClass.patch(Subtipo.class, item, existingItem);
+            if (modifiedItem==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             repository.editar(existingItem);
             return new ResponseEntity<>(null, HttpStatus.OK);
         } else {

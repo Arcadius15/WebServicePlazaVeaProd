@@ -1,6 +1,5 @@
 package com.plazavea.webservice.controller;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -12,12 +11,12 @@ import com.plazavea.webservice.dto.TiendaReq;
 import com.plazavea.webservice.dto.TiendaRes;
 import com.plazavea.webservice.model.Tienda;
 import com.plazavea.webservice.service.TiendaServ;
+import com.plazavea.webservice.utils.PatchClass;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -36,6 +35,9 @@ public class TiendaController {
 
     @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    private PatchClass patchClass;
 
     @GetMapping
     public ResponseEntity<List<TiendaRes>> getAll() {
@@ -82,11 +84,8 @@ public class TiendaController {
     public ResponseEntity<Void> update(@PathVariable("id") String id, @RequestBody Map<@NotNull Object,@NotNull Object> item) {
         Tienda existingItem = repository.buscar(id);
         if (existingItem!=null) {
-        	item.forEach((key,value)->{
-        		Field field = ReflectionUtils.findField(Tienda.class, (String) key);
-                field.setAccessible(true);
-				ReflectionUtils.setField(field, existingItem, value);
-        	});
+        	Tienda modifiedItem = (Tienda) patchClass.patch(Tienda.class, item, existingItem);
+            if (modifiedItem==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             repository.editar(existingItem);
             return new ResponseEntity<>(null, HttpStatus.OK);
         } else {
