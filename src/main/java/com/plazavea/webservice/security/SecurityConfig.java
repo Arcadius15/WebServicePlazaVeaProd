@@ -135,6 +135,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers(HttpMethod.GET,"/historialpedido").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			.antMatchers(HttpMethod.POST,"/historialpedido").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			.antMatchers(HttpMethod.PUT,"/historialpedido/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			//productotienda
+			.antMatchers(HttpMethod.GET,
+				"/productotienda/tienda/{idTienda}",
+								"/productotienda/producto/{idProducto}",
+								"/productotienda/{idTienda}/{idProducto}")
+				.hasAnyRole(Roles.MASTER.name(),Roles.EMPLEADO.name(),Roles.ADMIN.name())
+			.antMatchers(HttpMethod.POST,"/productotienda")
+				.hasAnyRole(Roles.MASTER.name(),Roles.EMPLEADO.name(),Roles.ADMIN.name())
+			.antMatchers(HttpMethod.PUT,"/productotienda/stock/empleado")
+				.hasAnyRole(Roles.MASTER.name(),Roles.EMPLEADO.name(),Roles.ADMIN.name())
+			.antMatchers(HttpMethod.PUT,"/productotienda/stock/cliente")
+				.hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.ADMIN.name())
 			.anyRequest()
 			.authenticated()
 			.and()

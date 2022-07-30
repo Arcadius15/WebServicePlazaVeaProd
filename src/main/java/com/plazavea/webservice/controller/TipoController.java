@@ -1,6 +1,5 @@
 package com.plazavea.webservice.controller;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -11,12 +10,12 @@ import com.plazavea.webservice.dto.TipoReq;
 import com.plazavea.webservice.dto.TipoRes;
 import com.plazavea.webservice.model.Tipo;
 import com.plazavea.webservice.service.TipoServ;
+import com.plazavea.webservice.utils.PatchClass;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -35,6 +34,9 @@ public class TipoController {
 
     @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    private PatchClass patchClass;
 
     @GetMapping
     public ResponseEntity<List<TipoRes>> getAll() {
@@ -78,11 +80,8 @@ public class TipoController {
     public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody Map<@NotNull Object,@NotNull Object> item) {
         Tipo existingItem = repository.buscar(id);
         if (existingItem!=null) {
-        	item.forEach((key,value)->{
-        		Field field = ReflectionUtils.findField(Tipo.class, (String) key);
-                field.setAccessible(true);
-				ReflectionUtils.setField(field, existingItem, value);
-        	});
+        	Tipo modifiedItem = (Tipo) patchClass.patch(Tipo.class, item, existingItem);
+            if (modifiedItem==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             repository.editar(existingItem);
             return new ResponseEntity<>(null, HttpStatus.OK);
         } else {

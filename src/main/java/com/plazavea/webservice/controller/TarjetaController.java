@@ -1,6 +1,5 @@
 package com.plazavea.webservice.controller;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -12,12 +11,12 @@ import com.plazavea.webservice.dto.TarjetaReq;
 import com.plazavea.webservice.dto.TarjetaRes;
 import com.plazavea.webservice.model.Tarjeta;
 import com.plazavea.webservice.service.TarjetaServ;
+import com.plazavea.webservice.utils.PatchClass;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -36,6 +35,9 @@ public class TarjetaController {
 
     @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    private PatchClass patchClass;
 
     @GetMapping("/listar/{id}")
     public ResponseEntity<List<TarjetaRes>> getAll(@PathVariable String id) {
@@ -78,16 +80,13 @@ public class TarjetaController {
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody Map<@NotNull Object,@NotNull Object> item) {
+    public ResponseEntity<?> update(@PathVariable("id") int id, @RequestBody Map<@NotNull Object,@NotNull Object> item) {
         Tarjeta existingItem = repository.buscar(id);
         if (existingItem!=null) {
-        	item.forEach((key,value)->{
-        		Field field = ReflectionUtils.findField(Tarjeta.class, (String) key);
-                field.setAccessible(true);
-				ReflectionUtils.setField(field, existingItem, value);
-        	});
-            repository.editar(existingItem);
-            return new ResponseEntity<>(null, HttpStatus.OK);
+        	Tarjeta modifiedItem = (Tarjeta) patchClass.patch(Tarjeta.class, item, existingItem);
+            if (modifiedItem==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            repository.editar(modifiedItem);
+            return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
