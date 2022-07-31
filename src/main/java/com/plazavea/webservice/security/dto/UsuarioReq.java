@@ -24,6 +24,7 @@ public class UsuarioReq {
     private String email;
     @NotEmpty
     private String password;
+
     private Set<String> roles;
     
     @Valid

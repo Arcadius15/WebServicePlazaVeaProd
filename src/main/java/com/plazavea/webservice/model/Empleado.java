@@ -45,7 +45,7 @@ public class Empleado {
     @NotBlank(message = "Apellido no puede ir Vacio")
     private String apellidos;
     @Column(nullable = false,length = 8)
-    @Pattern(regexp="(^$|[0-8]{8})",message = "DNI invalido")
+    @Pattern(regexp="(^$|[0-9]{8})",message = "DNI invalido")
     private String dni;
     @Column
     @Past(message = "Fecha Invalida")
