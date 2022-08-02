@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -147,6 +148,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				.hasAnyRole(Roles.MASTER.name(),Roles.EMPLEADO.name(),Roles.ADMIN.name())
 			.antMatchers(HttpMethod.PUT,"/productotienda/stock/cliente")
 				.hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.ADMIN.name())
+				.antMatchers("/swagger-ui/*", "/swagger-ui.html", "/webjars/**", "/v2/**", "/swagger-resources/**").permitAll()
 			.anyRequest()
 			.authenticated()
 			.and()
@@ -167,6 +169,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		return new BCryptPasswordEncoder();
 	}
 
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		web.ignoring().antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources", "/configuration/security", "/swagger-ui.html", "/webjars/**");
+	}
 	
 
 }
