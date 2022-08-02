@@ -52,6 +52,8 @@ class OrdenDetalleORes{
 @Data
 class ProductoODres{
     private String idProducto;
+    private String nombre;
+    private String imagenUrl;
 }
 
 
