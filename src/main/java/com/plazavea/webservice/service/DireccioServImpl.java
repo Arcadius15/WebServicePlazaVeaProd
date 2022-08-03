@@ -18,9 +18,8 @@ public class DireccioServImpl implements DireccionServ{
 
     @Override
     @Transactional
-    public void guardar(Direccion dir) {
-        repository.save(dir);
-        
+    public Direccion guardar(Direccion dir) {
+        return repository.save(dir);
     }
 
     @Override
@@ -47,6 +46,19 @@ public class DireccioServImpl implements DireccionServ{
     @Transactional(readOnly = true)
     public Direccion buscar(int id) {
         return repository.findById(id).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void activar(String idCliente, int id) {
+        var lista=listar(idCliente);
+        for (Direccion direccion : lista) {
+            if (direccion.getIdDireccion()!=id) {
+                direccion.setDirActivo(false);
+            }else{
+                direccion.setDirActivo(true);
+            }
+        }
     }
 
     

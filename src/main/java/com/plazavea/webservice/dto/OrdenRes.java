@@ -24,11 +24,13 @@ public class OrdenRes {
     private String direccion;
     private String formaPago;
     private int tipoFop;
+    private Double lat;
+    private Double lng;
     @Enumerated(EnumType.STRING)
     private OrdenStatus status;
     private ClienteOrdenRequest cliente;
     private TiendaOrdenRequest tienda;
-    private Set<OrdenDetalleORequest> ordendetalle;
+    private Set<OrdenDetalleORes> ordendetalle;
 }
 
 @Data

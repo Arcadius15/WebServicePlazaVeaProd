@@ -11,4 +11,5 @@ import com.plazavea.webservice.model.Direccion;
 @Repository
 public interface DireccionRepository extends JpaRepository<Direccion,Integer>{
     Optional<List<Direccion>> findByCliente_IdCliente(String id);
+    Optional<List<Direccion>> findByCliente_IdClienteAndDirActivo(String id,Boolean buscarActivo);
 }

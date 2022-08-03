@@ -57,6 +57,10 @@ public class Orden {
     @Column
     private String formaPago;
     @Column
+    private Double lat;
+    @Column
+    private Double lng;
+    @Column
     private int tipoFop;
     @Enumerated(EnumType.STRING)
     private OrdenStatus status;
