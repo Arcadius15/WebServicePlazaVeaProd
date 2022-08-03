@@ -45,7 +45,7 @@ class TiendaOrdenRes{
 
 @Data
 class OrdenDetalleORes{
-    private ProductoODreq producto;
+    private ProductoODres producto;
     private int cantidad;
     private Double precio;
 
