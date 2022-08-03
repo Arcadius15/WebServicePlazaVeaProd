@@ -25,6 +25,8 @@ public class Direccion {
     private Double latitud;
     @Column
     private Double longitud;
+    @Column
+    private Boolean dirActivo;
     @ManyToOne
     @JoinColumn(name = "id_cliente",nullable = false,
         foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key(id_cliente) references cliente(id_cliente)"))

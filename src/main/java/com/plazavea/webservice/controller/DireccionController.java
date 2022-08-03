@@ -17,6 +17,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -72,7 +73,8 @@ public class DireccionController {
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody DireccionReq item) {
         try {
-            repository.guardar(mapper.map(item, Direccion.class));
+            var dir = repository.guardar(mapper.map(item, Direccion.class));
+            repository.activar(dir.getCliente().getIdCliente(), dir.getIdDireccion());
             return new ResponseEntity<>( HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.EXPECTATION_FAILED);
@@ -80,16 +82,18 @@ public class DireccionController {
     }
 
     @PatchMapping("{id}")
+    @Transactional
     public ResponseEntity<Void> update(@PathVariable("id") int id, @RequestBody Map<@NotNull Object,@NotNull Object> item) {
         Direccion existingItem = repository.buscar(id);
-        if (existingItem!=null) {
-        	Direccion modifiedItem = (Direccion) patchClass.patch(Direccion.class, item, existingItem);
-            if (modifiedItem==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            repository.editar(existingItem);
-            return new ResponseEntity<>(null, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (existingItem==null) {return new ResponseEntity<>(HttpStatus.NOT_FOUND);}
+        boolean activo = existingItem.getDirActivo();
+        Direccion modifiedItem = (Direccion) patchClass.patch(Direccion.class, item, existingItem);
+        if (modifiedItem==null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (activo!=modifiedItem.getDirActivo()) {
+            repository.activar(modifiedItem.getCliente().getIdCliente(), modifiedItem.getIdDireccion());
         }
+        repository.editar(existingItem);
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
