@@ -28,8 +28,8 @@ public class OrdenRes {
     private Double lng;
     @Enumerated(EnumType.STRING)
     private OrdenStatus status;
-    private ClienteOrdenRequest cliente;
-    private TiendaOrdenRequest tienda;
+    private ClienteOrdenRes cliente;
+    private TiendaOrdenRes tienda;
     private Set<OrdenDetalleORes> ordendetalle;
 }
 
