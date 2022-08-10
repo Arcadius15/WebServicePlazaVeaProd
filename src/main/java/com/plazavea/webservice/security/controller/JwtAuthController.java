@@ -120,8 +120,8 @@ public class JwtAuthController {
                 break;
             }
         }
-        UsuarioRes userRes = mapper.map(userSave, UsuarioRes.class);
         if (userSave!=null) {
+            UsuarioRes userRes = mapper.map(userSave, UsuarioRes.class);
             return ResponseEntity.ok(userRes); 
         }
         return ResponseEntity.badRequest().body(new Mensaje("Usuario Invalido"));

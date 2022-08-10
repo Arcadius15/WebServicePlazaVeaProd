@@ -9,6 +9,11 @@ import javax.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
+import com.plazavea.webservice.enums.OrdenStatus;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class PatchClass {
     public Object patch(Class<?> class1,Map<@NotNull Object, @NotNull Object> item,Object obj){
@@ -19,9 +24,13 @@ public class PatchClass {
                 var valuePatch = new Object();
                 if (field.getType().equals(LocalDate.class)) {
                     valuePatch = LocalDate.parse(value.toString());
+                }
+                else if(field.getType().equals(OrdenStatus.class)){
+                    valuePatch = Enum.valueOf(OrdenStatus.class,value.toString());
                 }else{
                     valuePatch = value;
                 }
+                log.error(field.getGenericType().toString());
                 ReflectionUtils.setField(field, obj, valuePatch);
             });
             return obj;
