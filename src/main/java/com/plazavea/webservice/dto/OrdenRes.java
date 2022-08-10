@@ -31,6 +31,7 @@ public class OrdenRes {
     private ClienteOrdenRes cliente;
     private TiendaOrdenRes tienda;
     private Set<OrdenDetalleORes> ordendetalle;
+    private RepartidorOres repartidor;
 }
 
 @Data
@@ -56,6 +57,11 @@ class ProductoODres{
     private String idProducto;
     private String nombre;
     private String imagenUrl;
+}
+
+@Data
+class RepartidorOres{
+    private String idRepartidor;
 }
 
 
