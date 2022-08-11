@@ -2,6 +2,7 @@ package com.plazavea.webservice.utils;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import javax.validation.constraints.NotNull;
@@ -25,16 +26,21 @@ public class PatchClass {
                 if (field.getType().equals(LocalDate.class)) {
                     valuePatch = LocalDate.parse(value.toString());
                 }
+                else if(field.getType().equals(LocalDateTime.class)){
+                    var fechaHora = value.toString().split(" ");
+                    var fechaFormateada = fechaHora[0] + "T" + fechaHora[1];
+                    valuePatch = LocalDateTime.parse(fechaFormateada);
+                }
                 else if(field.getType().equals(OrdenStatus.class)){
                     valuePatch = Enum.valueOf(OrdenStatus.class,value.toString());
                 }else{
                     valuePatch = value;
                 }
-                log.error(field.getGenericType().toString());
                 ReflectionUtils.setField(field, obj, valuePatch);
             });
             return obj;
         } catch (Exception e) {
+            log.error("Error: " + e.getMessage());
             return null;
         }
     }
