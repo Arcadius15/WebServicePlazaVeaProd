@@ -25,10 +25,12 @@ import com.plazavea.webservice.security.dto.UsuarioReq;
 import com.plazavea.webservice.security.dto.UsuarioRes;
 import com.plazavea.webservice.security.model.Usuario;
 import com.plazavea.webservice.dto.Mensaje;
+import com.plazavea.webservice.model.Tienda;
 import com.plazavea.webservice.security.dto.JwtReq;
 import com.plazavea.webservice.security.service.UserDetService;
 import com.plazavea.webservice.security.service.UsuarioServ;
 import com.plazavea.webservice.security.utils.JwtUtil;
+import com.plazavea.webservice.service.TiendaServ;
 
 @RestController
 @RequestMapping("/jwt")
@@ -46,6 +48,9 @@ public class JwtAuthController {
 
     @Autowired
     private UsuarioServ usuarioServ;
+
+    @Autowired
+    private TiendaServ tiendaServ;
 
     @Autowired
     private ModelMapper mapper;
@@ -108,14 +113,21 @@ public class JwtAuthController {
         if(user.getRoles().size()>1)
             return ResponseEntity.badRequest().body(new Mensaje("Solo se puede ingresar un Rol por Usuario"));
         Usuario userSave = null;
+        Tienda tienda = null;
         for (String rol : user.getRoles()) {
             if (rol.toLowerCase().equals("empleado")) {
+                tienda = tiendaServ.buscar(user.getEmpleado().getTienda().getIdTienda());
+                user.getEmpleado().setTienda(tienda);
                 userSave = service.save(user);
                 break;
             }else if(rol.toLowerCase().equals("repartidor")){
+                tienda = tiendaServ.buscar(user.getRepartidor().getTienda().getIdTienda());
+                user.getRepartidor().setTienda(tienda);
                 userSave = service.save(user);
                 break;
             }else if(rol.toLowerCase().equals("admin")){
+                tienda = tiendaServ.buscar(user.getEmpleado().getTienda().getIdTienda());
+                user.getEmpleado().setTienda(tienda);
                 userSave = service.save(user);
                 break;
             }

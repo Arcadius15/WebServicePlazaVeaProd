@@ -7,12 +7,9 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -54,12 +51,19 @@ public class Tienda {
     @Column
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     private LocalTime horarioC;
+    @Column
+    private String gerente;
 
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "id_empleado",nullable = false,
-        foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_empleado) references empleado(id_empleado)"))
-    private Empleado empleado;
+    // @ManyToOne
+    // @JsonIgnore
+    // @JoinColumn(name = "id_empleado",nullable = false,
+    //     foreignKey = @ForeignKey(foreignKeyDefinition = "foreign key (id_empleado) references empleado(id_empleado)"))
+    // private Empleado empleado;
+
+    @OneToMany(mappedBy = "tienda")
+    private List<Empleado> empleados;
+
+
     
     @OneToMany(mappedBy = "tienda",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @JsonIgnore
@@ -72,4 +76,7 @@ public class Tienda {
     @OneToMany(mappedBy = "tienda",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @JsonIgnore
     private List<Pedido> pedidos;
+
+    @OneToMany(mappedBy = "tienda")
+    private List<Repartidor> repartidores;
 }
