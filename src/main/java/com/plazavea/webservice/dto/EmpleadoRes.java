@@ -19,5 +19,7 @@ public class EmpleadoRes {
     private LocalDate fechaNacimiento;
     @Pattern(regexp="(^$|[0-9]{9})")
     private String numTelefonico;
-    
+    private String idTienda;
 }
+
+

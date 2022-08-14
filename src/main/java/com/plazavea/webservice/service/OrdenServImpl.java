@@ -102,5 +102,12 @@ public class OrdenServImpl implements OrdenServ{
     public Orden buscar(String id) {
         return repository.findById(id).orElse(null);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Orden> listarPorTienda(String idTienda, Pageable page) {
+        
+        return repository.findByTienda_IdTienda(idTienda, page);
+    }
     
 }

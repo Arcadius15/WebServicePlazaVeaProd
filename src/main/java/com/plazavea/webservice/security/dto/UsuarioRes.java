@@ -70,6 +70,7 @@ class EmpleadoURes{
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate fechaNacimiento;
     private String numTelefonico;
+    private String idTienda;
 }
 
 @Getter
@@ -91,7 +92,9 @@ class RepartidorURes{
     private int turno;
     @Enumerated(EnumType.STRING)
     private RepartidorStatus status;
+    private String idTienda;
 }
+
 
 @Getter
 @Setter

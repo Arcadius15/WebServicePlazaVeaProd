@@ -18,4 +18,5 @@ public class TiendaRes {
     private LocalTime horarioA;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime horarioC;
+    private String gerente;
 }

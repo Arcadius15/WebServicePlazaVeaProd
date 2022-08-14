@@ -58,6 +58,24 @@ public class OrdenController {
         }
     }
 
+    @GetMapping("/tienda/{idTienda}")
+    public ResponseEntity<?> getByTienda(@PathVariable String idTienda,Pageable page){
+        try {
+            Page<OrdenRes> items = repository.listarPorTienda(idTienda, page).map(new Function<Orden,OrdenRes>() {
+                @Override
+                public OrdenRes apply(Orden t) {
+                    return mapper.map(t, OrdenRes.class);
+                }
+            });
+            if (items.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(items, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping("{id}")
     public ResponseEntity<OrdenRes> getById(@PathVariable("id") String id) {
         OrdenRes item = mapper.map(repository.buscar(id), OrdenRes.class) ;

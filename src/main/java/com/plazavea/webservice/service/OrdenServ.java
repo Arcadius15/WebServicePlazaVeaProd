@@ -12,4 +12,5 @@ public interface OrdenServ {
     public void eliminar(String id);
     public Page<Orden> listar(String idCliente,Pageable page);
     public Orden buscar(String id);
+    public Page<Orden> listarPorTienda(String idTienda,Pageable page);
 }
