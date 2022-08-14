@@ -86,7 +86,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers(HttpMethod.GET,"/orden/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
 			.antMatchers(HttpMethod.POST,"/orden").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
 			.antMatchers(HttpMethod.PATCH,"/orden/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
-			.antMatchers(HttpMethod.GET,"/tienda/{idTienda}").hasAnyRole(Roles.MASTER.name(),Roles.DELIVERY.name())
 			//proveedor
 			.antMatchers(HttpMethod.GET,"/proveedor/{id}").hasAnyRole(Roles.MASTER.name())
 			.antMatchers(HttpMethod.GET,"/proveedor").hasAnyRole(Roles.MASTER.name())
@@ -113,8 +112,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers(HttpMethod.POST,"/tarjeta").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			.antMatchers(HttpMethod.PATCH,"/tarjeta/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			//tienda
-			.antMatchers(HttpMethod.GET,"/tienda/{id}").permitAll()
-			.antMatchers(HttpMethod.GET,"/tienda").permitAll()
+			.antMatchers(HttpMethod.GET,"/tienda/**","/tienda/{id}").permitAll()
 			.antMatchers(HttpMethod.POST,"/tienda").hasAnyRole(Roles.MASTER.name(),Roles.ADMIN.name())
 			.antMatchers(HttpMethod.PATCH,"/tienda/{id}").hasAnyRole(Roles.MASTER.name(),Roles.ADMIN.name())
 			//tipo

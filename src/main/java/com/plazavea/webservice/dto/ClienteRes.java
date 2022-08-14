@@ -1,19 +1,21 @@
 package com.plazavea.webservice.dto;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Data
+@AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class ClienteRes {
     private String idCliente;
     private String nombre;
@@ -22,10 +24,8 @@ public class ClienteRes {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaNacimiento;
     private String numTelefonico;
-    @JsonInclude(content = Include.NON_EMPTY )
-    private Set<DireccionCliRes> direcciones;
-
-
+    @JsonInclude(Include.NON_EMPTY)
+    private List<DireccionCliRes> direcciones;
 }
 
 @Getter
@@ -34,6 +34,6 @@ public class ClienteRes {
 @NoArgsConstructor
 class DireccionCliRes{
     private String direccion;
-    private Long latitud;
-    private Long longitud;
+    private Double latitud;
+    private Double longitud;
 }

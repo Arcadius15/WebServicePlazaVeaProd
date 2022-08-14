@@ -33,6 +33,7 @@ import lombok.Data;
 @Table(name = "empleado")
 public class Empleado {
     @Id
+    @Column(name = "id_empleado")
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "empleado_seq")
     @GenericGenerator(name = "empleado_seq",strategy = "com.plazavea.webservice.utils.StringPrefixedSequenceGenerator",parameters = {
         @Parameter(name = StringPrefixedSequenceGenerator.INCREMENT_PARAM,value = "1"),

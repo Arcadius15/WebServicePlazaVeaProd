@@ -2,7 +2,6 @@ package com.plazavea.webservice.model;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -66,6 +65,6 @@ public class Cliente {
     private List<Orden> ordenes;
 
     @OneToMany(mappedBy = "cliente",cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    private Set<Direccion> direcciones;
+    private List<Direccion> direcciones;
 
 }
