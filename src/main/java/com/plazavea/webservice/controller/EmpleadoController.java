@@ -2,6 +2,7 @@ package com.plazavea.webservice.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
@@ -89,5 +90,20 @@ public class EmpleadoController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
+    }
+
+    @GetMapping("/admins")
+    public ResponseEntity<?> getAdmins(){
+        List<Empleado> listado = repository.buscarAdmins();
+        if (listado!=null) {
+            List<EmpleadoRes> listadoDto = listado.stream().map(new Function<Empleado,EmpleadoRes>() {
+                @Override
+                public EmpleadoRes apply(Empleado t) {
+                    return mapper.map(t, EmpleadoRes.class);
+                }
+            }).collect(Collectors.toList());
+            return new ResponseEntity<>(listadoDto, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

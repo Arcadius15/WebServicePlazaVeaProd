@@ -107,4 +107,13 @@ public class RepartidorController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<?> getRepartidor(@PathVariable String id){
+        Repartidor existingItem = servicio.buscar(id);
+        if (existingItem!=null) {
+            return new ResponseEntity<>(mapper.map(existingItem, RepartidorRes.class), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
 }
