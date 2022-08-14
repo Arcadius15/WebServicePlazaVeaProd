@@ -2,7 +2,6 @@ package com.plazavea.webservice.dto;
 
 import java.time.LocalTime;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -27,14 +26,6 @@ public class TiendaReq {
     private LocalTime horarioA;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime horarioC;
-    @Valid
-    private EmpleadoTRes empleado;
-}
-
-@Data
-class EmpleadoTRes{
     @NotEmpty
-    @NotBlank
-    @NotNull
-    private String idEmpleado;
+    private String gerente;
 }

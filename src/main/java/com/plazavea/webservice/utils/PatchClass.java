@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 
 import com.plazavea.webservice.enums.OrdenStatus;
+import com.plazavea.webservice.enums.RepartidorStatus;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +31,8 @@ public class PatchClass {
                     var fechaHora = value.toString().split(" ");
                     var fechaFormateada = fechaHora[0] + "T" + fechaHora[1];
                     valuePatch = LocalDateTime.parse(fechaFormateada);
+                }else if(field.getType().equals(RepartidorStatus.class)){
+                    valuePatch = Enum.valueOf(RepartidorStatus.class,value.toString());
                 }
                 else if(field.getType().equals(OrdenStatus.class)){
                     valuePatch = Enum.valueOf(OrdenStatus.class,value.toString());

@@ -63,79 +63,84 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers(HttpMethod.GET,"/producto").permitAll()
 			.antMatchers(HttpMethod.GET,"/producto/**").permitAll()
 			.antMatchers(HttpMethod.POST,"/producto").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name())
-			.antMatchers(HttpMethod.PUT,"/producto/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name())
+			.antMatchers(HttpMethod.PATCH,"/producto/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name())
 			//admin
 			.antMatchers(HttpMethod.GET,"/empleado/*").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name())
 			.antMatchers(HttpMethod.POST,"/empleado").hasAnyRole(Roles.MASTER.name())
-			.antMatchers(HttpMethod.PUT,"/empleado/{id}").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.PATCH,"/empleado/{id}").hasAnyRole(Roles.MASTER.name())
 			//categoria
 			.antMatchers(HttpMethod.GET,"/categoria/*").permitAll()
 			.antMatchers(HttpMethod.POST,"/categoria").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name())
-			.antMatchers(HttpMethod.PUT,"/categoria/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name())
+			.antMatchers(HttpMethod.PATCH,"/categoria/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name())
 			//cliente
 			.antMatchers(HttpMethod.GET,"/cliente/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
 			.antMatchers(HttpMethod.GET,"/cliente").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name(),Roles.DELIVERY.name())
 			.antMatchers(HttpMethod.POST,"/cliente").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name(),Roles.CLIENTE.name())
-			.antMatchers(HttpMethod.PUT,"/cliente/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.PATCH,"/cliente/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name(),Roles.CLIENTE.name())
 			//historial venta
 			.antMatchers(HttpMethod.GET,"/historial/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
 			.antMatchers(HttpMethod.POST,"/historial").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
-			.antMatchers(HttpMethod.PUT,"/historial/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name(),Roles.DELIVERY.name())
+			.antMatchers(HttpMethod.PATCH,"/historial/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name(),Roles.DELIVERY.name())
 			//orden
 			.antMatchers(HttpMethod.GET,"/orden/listar/{idCliente}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
 			.antMatchers(HttpMethod.GET,"/orden/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
 			.antMatchers(HttpMethod.POST,"/orden").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
-			.antMatchers(HttpMethod.PUT,"/orden/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
+			.antMatchers(HttpMethod.PATCH,"/orden/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
+			.antMatchers(HttpMethod.GET,"/tienda/{idTienda}").hasAnyRole(Roles.MASTER.name(),Roles.DELIVERY.name())
 			//proveedor
 			.antMatchers(HttpMethod.GET,"/proveedor/{id}").hasAnyRole(Roles.MASTER.name())
 			.antMatchers(HttpMethod.GET,"/proveedor").hasAnyRole(Roles.MASTER.name())
 			.antMatchers(HttpMethod.POST,"/proveedor").hasAnyRole(Roles.MASTER.name())
-			.antMatchers(HttpMethod.PUT,"/proveedor/{id}").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.PATCH,"/proveedor/{id}").hasAnyRole(Roles.MASTER.name())
 			//ruc
 			.antMatchers(HttpMethod.GET,"/ruc/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			.antMatchers(HttpMethod.GET,"/ruc").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			.antMatchers(HttpMethod.POST,"/ruc").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
-			.antMatchers(HttpMethod.PUT,"/ruc/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.PATCH,"/ruc/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			//subcategoria
 			.antMatchers(HttpMethod.GET,"/subcategoria/{id}").permitAll()
 			.antMatchers(HttpMethod.GET,"/subcategoria").permitAll()
 			.antMatchers(HttpMethod.POST,"/subcategoria").hasAnyRole(Roles.MASTER.name())
-			.antMatchers(HttpMethod.PUT,"/subcategoria/{id}").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.PATCH,"/subcategoria/{id}").hasAnyRole(Roles.MASTER.name())
 			//subtipo
 			.antMatchers(HttpMethod.GET,"/subtipo/{id}").permitAll()
 			.antMatchers(HttpMethod.GET,"/subtipo").permitAll()
 			.antMatchers(HttpMethod.POST,"/subtipo").hasAnyRole(Roles.MASTER.name())
-			.antMatchers(HttpMethod.PUT,"/subtipo/{id}").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.PATCH,"/subtipo/{id}").hasAnyRole(Roles.MASTER.name())
 			//tarjeta
 			.antMatchers(HttpMethod.GET,"/tarjeta/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			.antMatchers(HttpMethod.GET,"/tarjeta").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			.antMatchers(HttpMethod.POST,"/tarjeta").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
-			.antMatchers(HttpMethod.PUT,"/tarjeta/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.PATCH,"/tarjeta/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			//tienda
 			.antMatchers(HttpMethod.GET,"/tienda/{id}").permitAll()
 			.antMatchers(HttpMethod.GET,"/tienda").permitAll()
 			.antMatchers(HttpMethod.POST,"/tienda").hasAnyRole(Roles.MASTER.name(),Roles.ADMIN.name())
-			.antMatchers(HttpMethod.PUT,"/tienda/{id}").hasAnyRole(Roles.MASTER.name(),Roles.ADMIN.name())
+			.antMatchers(HttpMethod.PATCH,"/tienda/{id}").hasAnyRole(Roles.MASTER.name(),Roles.ADMIN.name())
 			//tipo
 			.antMatchers(HttpMethod.GET,"/tipo/{id}").permitAll()
 			.antMatchers(HttpMethod.GET,"/tipo").permitAll()
 			.antMatchers(HttpMethod.POST,"/tipo").hasAnyRole(Roles.MASTER.name())
-			.antMatchers(HttpMethod.PUT,"/tipo/{id}").hasAnyRole(Roles.MASTER.name())
+			.antMatchers(HttpMethod.PATCH,"/tipo/{id}").hasAnyRole(Roles.MASTER.name())
 			//usuario
 			.antMatchers(HttpMethod.GET,"/usuario/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			.antMatchers(HttpMethod.GET,"/usuario").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			.antMatchers(HttpMethod.POST,"/usuario").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
-			.antMatchers(HttpMethod.PUT,"/usuario/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.PATCH,"/usuario/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			//pedido
 			.antMatchers(HttpMethod.GET,"/pedido/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			.antMatchers(HttpMethod.GET,"/pedido").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			.antMatchers(HttpMethod.POST,"/pedido").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
-			.antMatchers(HttpMethod.PUT,"/pedido/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.PATCH,"/pedido/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			//historialpedido
 			.antMatchers(HttpMethod.GET,"/historialpedido/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			.antMatchers(HttpMethod.GET,"/historialpedido").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
 			.antMatchers(HttpMethod.POST,"/historialpedido").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
-			.antMatchers(HttpMethod.PUT,"/historialpedido/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			.antMatchers(HttpMethod.PATCH,"/historialpedido/{id}").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name())
+			//repartidor
+			.antMatchers(HttpMethod.GET,"/repartidor/**").hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name(),Roles.ADMIN.name())
+			.antMatchers(HttpMethod.POST,"/repartidor/**").hasAnyRole(Roles.MASTER.name(),Roles.DELIVERY.name(),Roles.ADMIN.name())
+			.antMatchers(HttpMethod.PATCH,"/repartidor").hasAnyRole(Roles.MASTER.name(),Roles.DELIVERY.name(),Roles.ADMIN.name())
 			//productotienda
 			.antMatchers(HttpMethod.GET,
 				"/productotienda/tienda/{idTienda}",

@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrdenRepository extends JpaRepository<Orden,String>{
     Page<Orden> findByCliente_IdCliente(String cliente,Pageable page);
+    Page<Orden> findByTienda_IdTienda(String tienda,Pageable page);
 }
