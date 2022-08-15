@@ -1,9 +1,14 @@
 package com.plazavea.webservice.security.controller;
 
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,6 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -154,6 +160,21 @@ public class JwtAuthController {
             return ResponseEntity.badRequest().body(new Mensaje("Email o Contraseña invalidos"));
         }
         
+    }
+
+    @GetMapping("/allusers")
+    public ResponseEntity<?> getAllUsers(){
+        List<Usuario> listado = usuarioServ.getUsers();
+        if (listado.isEmpty()) {
+            return new ResponseEntity<>( HttpStatus.NO_CONTENT);
+        }
+        List<UsuarioRes> listadoDto = usuarioServ.getUsers().stream().map(new Function<Usuario,UsuarioRes>() {
+            @Override
+            public UsuarioRes apply(Usuario t) {
+                return mapper.map(t, UsuarioRes.class);
+            }
+        }).collect(Collectors.toList());
+        return new ResponseEntity<>(listadoDto,HttpStatus.OK);
     }
 
 
