@@ -5,10 +5,14 @@ import java.util.function.Function;
 
 import javax.validation.constraints.NotNull;
 
+import com.plazavea.webservice.dto.Mensaje;
 import com.plazavea.webservice.dto.OrdenReq;
 import com.plazavea.webservice.dto.OrdenRes;
+import com.plazavea.webservice.enums.RepartidorStatus;
 import com.plazavea.webservice.model.Orden;
+import com.plazavea.webservice.model.Repartidor;
 import com.plazavea.webservice.service.OrdenServ;
+import com.plazavea.webservice.service.RepartidorServ;
 import com.plazavea.webservice.utils.PatchClass;
 
 import org.modelmapper.ModelMapper;
@@ -22,8 +26,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -32,6 +38,9 @@ public class OrdenController {
 
     @Autowired
     private OrdenServ repository;
+
+    @Autowired
+    private RepartidorServ repartidorServ;
 
     @Autowired
     private ModelMapper mapper;
@@ -120,5 +129,21 @@ public class OrdenController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
+    }
+
+    @PutMapping("/repartidor/{idOrden}")
+    public ResponseEntity<?> swithRepartidor(@PathVariable String idOrden,@RequestParam(required = true) String idRepartidor){
+        Orden item = repository.buscar(idOrden);
+        Repartidor childItem = repartidorServ.buscar(idRepartidor);
+        if (item!=null || childItem!=null) {
+            if (childItem.getStatus().equals(RepartidorStatus.LIBRE)) {
+                item.setRepartidor(childItem);
+                repository.editar(item);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(new Mensaje("Repartidor Ocupado"), HttpStatus.BAD_REQUEST);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

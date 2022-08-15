@@ -59,6 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers("/jwt/registro").permitAll()
 			.antMatchers("/jwt/editpassword").permitAll()
 			.antMatchers("/jwt/getuserdetails").hasAnyRole(Roles.USER.name())
+			.antMatchers("/jwt/allusers").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name())
 			//producto
 			.antMatchers(HttpMethod.GET,"/producto").permitAll()
 			.antMatchers(HttpMethod.GET,"/producto/**").permitAll()
@@ -86,6 +87,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers(HttpMethod.GET,"/orden/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.CLIENTE.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
 			.antMatchers(HttpMethod.POST,"/orden").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
 			.antMatchers(HttpMethod.PATCH,"/orden/{id}").hasAnyRole(Roles.ADMIN.name(),Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.DELIVERY.name())
+			.antMatchers(HttpMethod.PUT,"/orden/repartidor/{idOrden}").hasAnyRole(Roles.DELIVERY.name(),Roles.MASTER.name(),Roles.CLIENTE.name())
 			//proveedor
 			.antMatchers(HttpMethod.GET,"/proveedor/{id}").hasAnyRole(Roles.MASTER.name())
 			.antMatchers(HttpMethod.GET,"/proveedor").hasAnyRole(Roles.MASTER.name())

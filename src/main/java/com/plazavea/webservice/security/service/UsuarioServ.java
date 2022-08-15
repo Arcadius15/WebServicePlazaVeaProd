@@ -1,5 +1,6 @@
 package com.plazavea.webservice.security.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +26,9 @@ public class UsuarioServ {
 
     public void save(Usuario user){
         usuarioRepository.save(user);
+    }
+
+    public List<Usuario> getUsers(){
+        return usuarioRepository.findAll();
     }
 }
