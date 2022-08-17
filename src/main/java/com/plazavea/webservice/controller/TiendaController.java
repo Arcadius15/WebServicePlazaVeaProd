@@ -9,7 +9,9 @@ import javax.validation.constraints.NotNull;
 
 import com.plazavea.webservice.dto.TiendaReq;
 import com.plazavea.webservice.dto.TiendaRes;
+import com.plazavea.webservice.model.Empleado;
 import com.plazavea.webservice.model.Tienda;
+import com.plazavea.webservice.service.EmpleadoServ;
 import com.plazavea.webservice.service.TiendaServ;
 import com.plazavea.webservice.utils.PatchClass;
 
@@ -37,6 +39,9 @@ public class TiendaController {
     private ModelMapper mapper;
 
     @Autowired
+    private EmpleadoServ empleadoServ;
+
+    @Autowired
     private PatchClass patchClass;
 
     @GetMapping
@@ -45,7 +50,10 @@ public class TiendaController {
             List<TiendaRes> items = repository.listar().stream().map(new Function<Tienda,TiendaRes>() {
                 @Override
                 public TiendaRes apply(Tienda t) {
-                    return mapper.map(t, TiendaRes.class);
+                    TiendaRes res = mapper.map(t, TiendaRes.class);
+                    Empleado emp = empleadoServ.buscar(res.getGerente());
+                    res.setNomGerente(emp.getNombres()+ " "+emp.getApellidos());
+                    return res;
                 }
             }).collect(Collectors.toList());
 
