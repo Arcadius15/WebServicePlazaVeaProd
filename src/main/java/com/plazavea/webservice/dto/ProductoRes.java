@@ -13,7 +13,7 @@ public class ProductoRes {
     private Double precioOferta;
     private boolean oferta;
 
-    private List<PromocionReq> promociones;
-    private List<EspecificacionesReq> especificaciones;
-    private List<DescripcionReq> descripciones;
+    private List<PromocionRes> promociones;
+    private List<EspecificacionesRes> especificaciones;
+    private List<DescripcionRes> descripciones;
 }

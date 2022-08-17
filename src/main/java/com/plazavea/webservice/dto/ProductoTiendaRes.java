@@ -16,6 +16,10 @@ public class ProductoTiendaRes {
     private int stock;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate fechaActualizacion;
+    private ProductoRes producto;
+    private TiendaRes tienda;
+
+
 }
 
 @NoArgsConstructor
