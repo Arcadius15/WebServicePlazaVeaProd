@@ -153,7 +153,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				.hasAnyRole(Roles.MASTER.name(),Roles.EMPLEADO.name(),Roles.ADMIN.name())
 			.antMatchers(HttpMethod.PUT,"/productotienda/stock/cliente")
 				.hasAnyRole(Roles.MASTER.name(),Roles.CLIENTE.name(),Roles.ADMIN.name())
-				.antMatchers("/swagger-ui/*", "/swagger-ui.html", "/webjars/**", "/v2/**", "/swagger-resources/**").permitAll()
+				//.antMatchers("/swagger-ui/*", "/swagger-ui.html", "/webjars/**", "/v2/**", "/swagger-resources/**").permitAll()
 			.anyRequest()
 			.authenticated()
 			.and()
